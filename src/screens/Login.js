@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, Component} from 'react';
 import {
     View,
     Text,
@@ -7,7 +7,7 @@ import {
     Platform,
     StyleSheet,
     StatusBar,
-    Alert, KeyboardAvoidingView, ScrollView
+    Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -26,6 +26,7 @@ export const SignInScreen = ({navigation}) => {
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
     const [isLoading, setLoading] = useState(false)
+
 
     const entrar = () => {
         let data = {

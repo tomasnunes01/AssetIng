@@ -4,7 +4,7 @@ import Config from "../../util/Config";
 class SiteService {
 
     async getSites(){
-        await axios.get(Config.API_URL + 'conta/getUserData')
+        await axios.get(Config.API_URL + 'conta/getSites')
             .then(function (response) {
                 console.log(response);
             })

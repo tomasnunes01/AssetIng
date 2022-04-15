@@ -125,6 +125,21 @@ export const AddUser = ({navigation}) => {
         }
     }
 
+    let state = {
+        userValues:[],
+        selectedValue:''
+    }
+    const GetFakeData = () => {
+        userService.getUserData()
+            .then(response => response.json())
+            .then(json => {
+                console.log(json)
+                this.setState({
+                    userValues:json
+                })
+            })
+    }
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -239,6 +254,7 @@ export const AddUser = ({navigation}) => {
                                 <Picker.Item label="Java" value="java" />
                                 <Picker.Item label="JavaScript" value="js" />
                             </Picker>*/}
+
                         </View>
                         <View style={{alignItems: 'center', flex: 2, flexDirection: 'column', justifyContent: 'center'}}>
                             <TouchableOpacity

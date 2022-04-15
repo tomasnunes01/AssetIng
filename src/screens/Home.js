@@ -8,7 +8,6 @@ import { AddUser } from "./AddUser";
 import {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {theme} from "../theme";
-import {FormButton} from "../components/login-form.component";
 
 const logout = async (navigation) => {
     await AsyncStorage.clear()
