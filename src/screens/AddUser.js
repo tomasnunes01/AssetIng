@@ -6,7 +6,7 @@ import {
     StyleSheet,
     StatusBar,
     Alert,
-    KeyboardAvoidingView,
+    KeyboardAvoidingView, ActivityIndicator,
 } from 'react-native';
 import { Input , Text } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
@@ -16,7 +16,8 @@ import { ThemeProvider } from "styled-components/native";
 import { theme } from "../theme";
 import userService from '../services/UserService';
 import {Picker} from '@react-native-picker/picker';
-
+import EscritorioService from "../services/EscritorioService";
+import Config from "../../util/Config";
 
 export const AddUser = ({navigation}) => {
 
@@ -35,6 +36,8 @@ export const AddUser = ({navigation}) => {
     //const [errorContacto, setErrorContacto] = useState(null)
     const [errorUsername, setErrorUsername] = useState(null)
     const [isLoading, setLoading] = useState(false)
+    const [isRendering, setRendering] = useState(false)
+    const [pickerValueHolder, setPickerValueHolder] = useState('')
 
     const emailInput = React.createRef();
     const nomeInput = React.createRef();
@@ -50,6 +53,18 @@ export const AddUser = ({navigation}) => {
     const reContactoPT = /^(\+351)?(?:9[1-36][0-9]|2[12][0-9]|2[35][1-689]|24[1-59]|26[1-35689]|27[1-9]|28[1-69]|29[1256])[0-9]{6}$/
     const reContactoUK = /^\s*((0044[ ]?|0)[ ]?20[ ]?[7,8]{1}?[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{4})|((0044[ ]?|0[1-8]{1})[0-9]{1,2}[ ]?[1-9]{1}[0-9]{2}[ ]?([0-9]{6}|[0-9]{5}|[0-9]{4}))|(0[1-8]{1}[0-9]{3}[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{2,3})|(0800[ ]?([1-9]{3}[ ]?[1-9]{4}|[1-9]{6}|[1-9]{4}))|(09[0-9]{1}[ ]?[0-9]{1}[ ]?([1-9]{4}|[1-9]{6}|[1-9]{3}[ ]?[1-9]{4}))\s*$/
     const reContactoBR = /(?:^\([0]?[1-9]{2}\)|^[0]?[1-9]{2}[\.-\s]?)[9]?[1-9]\d{3}[\.-\s]?\d{4}$/
+
+    let dataSource
+
+    EscritorioService.findAll()
+        .then((response) =>{
+            setRendering(false)
+            dataSource = response
+            console.log(dataSource)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 
     const validar = () => {
         let erro = false
@@ -125,23 +140,7 @@ export const AddUser = ({navigation}) => {
         }
     }
 
-    let state = {
-        userValues:[],
-        selectedValue:''
-    }
-    const GetFakeData = () => {
-        userService.getUserData()
-            .then(response => response.json())
-            .then(json => {
-                console.log(json)
-                this.setState({
-                    userValues:json
-                })
-            })
-    }
-
-
-    return (
+   return (
         <ThemeProvider theme={theme}>
             <KeyboardAvoidingView
                 behaviour={Platform.OS == "ios" ? "padding" : "height"}
@@ -156,130 +155,137 @@ export const AddUser = ({navigation}) => {
                             backgroundColor: colors.background
                         }]}
                     >
-                        <View style={{flex: 2, flexDirection: 'column', justifyContent: 'flex-start'}}>
-                            <Input
-                                placeholder="Email"
-                                placeholderTextColor="#686868"
-                                onChangeText={value => {
-                                    setEmail(value)
-                                    setErrorEmail(null)
-                                }}
-                                keyboardType="email-address"
-                                inputContainerStyle={styles.input}
-                                autoCapitalize="none"
-                                errorMessage={errorEmail}
-                                errorStyle={styles.errorStyle}
-                                ref={emailInput}
-                                maxLength={45}
-                            />
-                            <View style={{flexDirection: 'row'}}>
-                                <Input
-                                    placeholder="Nome"
-                                    placeholderTextColor="#686868"
-                                    onChangeText={value => {
-                                        setNome(value)
-                                        setErrorNome(null)
-                                    }}
-                                    inputContainerStyle={styles.inputNome}
-                                    autoCapitalize="words"
-                                    errorMessage={errorNome}
-                                    errorStyle={styles.errorStyle}
-                                    ref={nomeInput}
-                                    maxLength={45}
-                                />
-                                <Input
-                                    placeholder="Apelido"
-                                    placeholderTextColor="#686868"
-                                    onChangeText={value => {
-                                        setApelido(value)
-                                        setErrorApelido()
-                                    }}
-                                    inputContainerStyle={styles.inputApelido}
-                                    autoCapitalize="words"
-                                    errorMessage={errorApelido}
-                                    errorStyle={styles.erroApelido}
-                                    ref={apelidoInput}
-                                    maxLength={45}
-                                />
-                            </View>
-                            {/*<Input
-                                placeholder="Contacto telefónico"
-                                placeholderTextColor="#686868"
-                                onChangeText={value => {
-                                    setContacto(value)
-                                    setErrorContacto(null)
-                                }}
-                                inputContainerStyle={styles.input}
-                                keyboardType="phone-pad"
-                                maxLength={20}
-                                returnKeyType="done"
-                                errorMessage={errorContacto}
-                                errorStyle={styles.errorStyle}
-                                ref={contactoInput}
-                            />*/}
-                            <Input
-                                placeholder="Username"
-                                placeholderTextColor="#686868"
-                                onChangeText={value => {
-                                    setUsername(value)
-                                    setErrorUsername(null)
-                                }}
-                                inputContainerStyle={styles.input}
-                                autoCapitalize="none"
-                                errorMessage={errorUsername}
-                                errorStyle={styles.errorStyle}
-                                ref={usernameInput}
-                                maxLength={16}
-                            />
-                            <Input
-                                placeholder="Palavra-passe"
-                                placeholderTextColor="#686868"
-                                onChangeText={value => {
-                                    setPassword(value)
-                                    setErrorPassword(null)
-                                }}
-                                secureTextEntry={true}
-                                inputContainerStyle={styles.input}
-                                autoCapitalize="none"
-                                errorMessage={errorPassword}
-                                errorStyle={styles.errorStyle}
-                                ref={passwordInput}
-                                maxLength={255}
-                            />
-                            {/*<Picker
-                                selectedValue={selectedLanguage}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    setSelectedLanguage(itemValue)
-                                }>
-                                <Picker.Item label="Java" value="java" />
-                                <Picker.Item label="JavaScript" value="js" />
-                            </Picker>*/}
-
-                        </View>
-                        <View style={{alignItems: 'center', flex: 2, flexDirection: 'column', justifyContent: 'center'}}>
-                            <TouchableOpacity
+                        {isRendering &&
+                            <ActivityIndicator color={"#28a745"} size={'large'}/>
+                        }
+                        {!isRendering &&
+                            <>
+                                <View style={{flex: 2, flexDirection: 'column', justifyContent: 'flex-start'}}>
+                                    <Input
+                                        placeholder="Email"
+                                        placeholderTextColor="#686868"
+                                        onChangeText={value => {
+                                            setEmail(value)
+                                            setErrorEmail(null)
+                                        }}
+                                        keyboardType="email-address"
+                                        inputContainerStyle={styles.input}
+                                        autoCapitalize="none"
+                                        errorMessage={errorEmail}
+                                        errorStyle={styles.errorStyle}
+                                        ref={emailInput}
+                                        maxLength={45}
+                                    />
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Input
+                                            placeholder="Nome"
+                                            placeholderTextColor="#686868"
+                                            onChangeText={value => {
+                                                setNome(value)
+                                                setErrorNome(null)
+                                            }}
+                                            inputContainerStyle={styles.inputNome}
+                                            autoCapitalize="words"
+                                            errorMessage={errorNome}
+                                            errorStyle={styles.errorStyle}
+                                            ref={nomeInput}
+                                            maxLength={45}
+                                        />
+                                        <Input
+                                            placeholder="Apelido"
+                                            placeholderTextColor="#686868"
+                                            onChangeText={value => {
+                                                setApelido(value)
+                                                setErrorApelido()
+                                            }}
+                                            inputContainerStyle={styles.inputApelido}
+                                            autoCapitalize="words"
+                                            errorMessage={errorApelido}
+                                            errorStyle={styles.erroApelido}
+                                            ref={apelidoInput}
+                                            maxLength={45}
+                                        />
+                                    </View>
+                                    {/*<Input
+                                        placeholder="Contacto telefónico"
+                                        placeholderTextColor="#686868"
+                                        onChangeText={value => {
+                                            setContacto(value)
+                                            setErrorContacto(null)
+                                        }}
+                                        inputContainerStyle={styles.input}
+                                        keyboardType="phone-pad"
+                                        maxLength={20}
+                                        returnKeyType="done"
+                                        errorMessage={errorContacto}
+                                        errorStyle={styles.errorStyle}
+                                        ref={contactoInput}
+                                    />*/}
+                                    <Input
+                                        placeholder="Username"
+                                        placeholderTextColor="#686868"
+                                        onChangeText={value => {
+                                            setUsername(value)
+                                            setErrorUsername(null)
+                                        }}
+                                        inputContainerStyle={styles.input}
+                                        autoCapitalize="none"
+                                        errorMessage={errorUsername}
+                                        errorStyle={styles.errorStyle}
+                                        ref={usernameInput}
+                                        maxLength={16}
+                                    />
+                                    <Input
+                                        placeholder="Palavra-passe"
+                                        placeholderTextColor="#686868"
+                                        onChangeText={value => {
+                                            setPassword(value)
+                                            setErrorPassword(null)
+                                        }}
+                                        secureTextEntry={true}
+                                        inputContainerStyle={styles.input}
+                                        autoCapitalize="none"
+                                        errorMessage={errorPassword}
+                                        errorStyle={styles.errorStyle}
+                                        ref={passwordInput}
+                                        maxLength={255}
+                                    />
+                                    <Picker
+                                        selectedValue={pickerValueHolder}
+                                        onValueChange={(itemValue) => setPickerValueHolder(itemValue)} >
+                                        { dataSource.map((item, key)=>(
+                                            <Picker.Item label={item} key={key} />)
+                                        )}
+                                    </Picker>
+                                </View>
+                                <View style={{alignItems: 'center', flex: 2, flexDirection: 'column', justifyContent: 'center'}}>
+                            {isLoading &&
+                                <ActivityIndicator color={"#28a745"} size={'large'}/>
+                            }
+                            {!isLoading &&
+                                <TouchableOpacity
                                 style={{width: '65%', marginBottom: '3%'}}
                                 onPress={() => guardar()}
-                            >
-                                <FormButtonView>
-                                    <FormButton>
-                                        Guardar
-                                    </FormButton>
-                                </FormButtonView>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
+                                >
+                                    <FormButtonView>
+                                        <FormButton>
+                                            Guardar
+                                        </FormButton>
+                                    </FormButtonView>
+                                </TouchableOpacity>
+                            }
+                                <TouchableOpacity
                                 onPress={() => navigation.goBack()}
                                 style={{
-                                    width: '35%',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <Text>
-                                    Cancelar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                                width: '35%',
+                                alignItems: 'center'
+                            }}
+                                >
+                                    <Text>Cancelar</Text>
+                                </TouchableOpacity>
+                                </View>
+                            </>
+                        }
                     </Animatable.View>
             </KeyboardAvoidingView>
         </ThemeProvider>
