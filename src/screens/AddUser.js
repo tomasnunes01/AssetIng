@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     View,
     TouchableOpacity,
@@ -54,17 +54,19 @@ export const AddUser = ({navigation}) => {
     const reContactoUK = /^\s*((0044[ ]?|0)[ ]?20[ ]?[7,8]{1}?[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{4})|((0044[ ]?|0[1-8]{1})[0-9]{1,2}[ ]?[1-9]{1}[0-9]{2}[ ]?([0-9]{6}|[0-9]{5}|[0-9]{4}))|(0[1-8]{1}[0-9]{3}[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{2,3})|(0800[ ]?([1-9]{3}[ ]?[1-9]{4}|[1-9]{6}|[1-9]{4}))|(09[0-9]{1}[ ]?[0-9]{1}[ ]?([1-9]{4}|[1-9]{6}|[1-9]{3}[ ]?[1-9]{4}))\s*$/
     const reContactoBR = /(?:^\([0]?[1-9]{2}\)|^[0]?[1-9]{2}[\.-\s]?)[9]?[1-9]\d{3}[\.-\s]?\d{4}$/
 
-    let dataSource
+    const [dataSource, setDataSource] = useState([]);
 
-    EscritorioService.findAll()
-        .then((response) =>{
-            setRendering(false)
-            dataSource = response
-            console.log(dataSource)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+    // falamos depois sobre react hooks
+    useEffect(async () => {
+      try {
+        const response = await EscritorioService.findAll();
+        setRendering(false)
+        setDataSource(response);
+      } catch(error) {
+        // tratamento de erro melhor
+        console.err(error);
+      }
+    }, []);
 
     const validar = () => {
         let erro = false
