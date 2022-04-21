@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Input , Text } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useTheme } from 'react-native-paper';
 import { FormButton, FormButtonView } from '../components/login-form.component';
 import { ThemeProvider } from "styled-components/native";
@@ -18,6 +19,7 @@ import userService from '../services/UserService';
 import {Picker} from '@react-native-picker/picker';
 import EscritorioService from "../services/EscritorioService";
 import Config from "../../util/Config";
+import escritorioService from '../services/EscritorioService';
 
 export const AddUser = ({navigation}) => {
 
@@ -27,17 +29,18 @@ export const AddUser = ({navigation}) => {
     const [password, setPassword] = useState(null)
     const [nome, setNome] = useState(null)
     const [apelido, setApelido] = useState(null)
-    const [contacto, setContacto] = useState(null)
+    const [grupo, setGrupo] = useState('Utilizador')
     const [username, setUsername] = useState(null)
     const [errorEmail, setErrorEmail] = useState(null)
     const [errorPassword, setErrorPassword] = useState(null)
     const [errorNome, setErrorNome] = useState(null)
     const [errorApelido, setErrorApelido] = useState(null)
-    //const [errorContacto, setErrorContacto] = useState(null)
     const [errorUsername, setErrorUsername] = useState(null)
     const [isLoading, setLoading] = useState(false)
     const [isRendering, setRendering] = useState(false)
-    const [pickerValueHolder, setPickerValueHolder] = useState('')
+
+    const [dataSource, setDataSource] = useState([]);
+    const [pickerValueHolder, setPickerValueHolder] = useState(' ');
 
     const emailInput = React.createRef();
     const nomeInput = React.createRef();
@@ -54,18 +57,14 @@ export const AddUser = ({navigation}) => {
     const reContactoUK = /^\s*((0044[ ]?|0)[ ]?20[ ]?[7,8]{1}?[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{4})|((0044[ ]?|0[1-8]{1})[0-9]{1,2}[ ]?[1-9]{1}[0-9]{2}[ ]?([0-9]{6}|[0-9]{5}|[0-9]{4}))|(0[1-8]{1}[0-9]{3}[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{2,3})|(0800[ ]?([1-9]{3}[ ]?[1-9]{4}|[1-9]{6}|[1-9]{4}))|(09[0-9]{1}[ ]?[0-9]{1}[ ]?([1-9]{4}|[1-9]{6}|[1-9]{3}[ ]?[1-9]{4}))\s*$/
     const reContactoBR = /(?:^\([0]?[1-9]{2}\)|^[0]?[1-9]{2}[\.-\s]?)[9]?[1-9]\d{3}[\.-\s]?\d{4}$/
 
-    const [dataSource, setDataSource] = useState([]);
-
-    // falamos depois sobre react hooks
     useEffect(async () => {
-      try {
-        const response = await EscritorioService.findAll();
-        setRendering(false)
-        setDataSource(response);
-      } catch(error) {
-        // tratamento de erro melhor
-        console.err(error);
-      }
+        try {
+            const response = await EscritorioService.findAll();
+            setRendering(false)
+            setDataSource(response);
+        } catch(error) {
+            console.err(error);
+        }
     }, []);
 
     const validar = () => {
@@ -73,7 +72,6 @@ export const AddUser = ({navigation}) => {
         setErrorEmail(null)
         setErrorNome(null)
         setErrorApelido(null)
-        //setErrorContacto(null)
         setErrorUsername(null)
         setErrorPassword(null)
 
@@ -95,12 +93,6 @@ export const AddUser = ({navigation}) => {
             apelidoInput.current.shake()
             apelidoInput.current.focus()
         }
-        /*if (!reContactoPT.test(String(contacto))) {
-            setErrorContacto("O campo deve ter um contacto telefónico")
-            erro = true
-            contactoInput.current.shake()
-            contactoInput.current.focus()
-        }*/
         if (!reUsername.test(String(username))) {
             setErrorUsername("O username não é válido")
             erro = true
@@ -119,16 +111,18 @@ export const AddUser = ({navigation}) => {
     const guardar = () => {
         if (validar()) {
             setLoading(true)
+            const cod_escritorio = escritorioService.findOne(pickerValueHolder)
 
             let data = {
                 email: email,
                 nome: nome,
                 apelido: apelido,
-                //contacto: contacto,
+                grupo: grupo,
                 username: username,
-                pass: password
+                pass: password,
+                cod_escritorio: cod_escritorio,
             }
-
+            
             userService.registar(data)
                 .then((response) => {
                     setLoading(false)
@@ -137,7 +131,7 @@ export const AddUser = ({navigation}) => {
                 })
                 .catch((error) => {
                     setLoading(false)
-                    Alert.alert("Erro", "Ocorreu um erro, por favor tente novamente mais tarde")
+                    Alert.alert("Erro:", "error")
                 })
         }
     }
@@ -162,7 +156,7 @@ export const AddUser = ({navigation}) => {
                         }
                         {!isRendering &&
                             <>
-                                <View style={{flex: 2, flexDirection: 'column', justifyContent: 'flex-start'}}>
+                                <View style={{flex: 3, flexDirection: 'column', justifyContent: 'flex-start'}}>
                                     <Input
                                         placeholder="Email"
                                         placeholderTextColor="#686868"
@@ -208,21 +202,6 @@ export const AddUser = ({navigation}) => {
                                             maxLength={45}
                                         />
                                     </View>
-                                    {/*<Input
-                                        placeholder="Contacto telefónico"
-                                        placeholderTextColor="#686868"
-                                        onChangeText={value => {
-                                            setContacto(value)
-                                            setErrorContacto(null)
-                                        }}
-                                        inputContainerStyle={styles.input}
-                                        keyboardType="phone-pad"
-                                        maxLength={20}
-                                        returnKeyType="done"
-                                        errorMessage={errorContacto}
-                                        errorStyle={styles.errorStyle}
-                                        ref={contactoInput}
-                                    />*/}
                                     <Input
                                         placeholder="Username"
                                         placeholderTextColor="#686868"
@@ -252,15 +231,37 @@ export const AddUser = ({navigation}) => {
                                         ref={passwordInput}
                                         maxLength={255}
                                     />
-                                    <Picker
-                                        selectedValue={pickerValueHolder}
-                                        onValueChange={(itemValue) => setPickerValueHolder(itemValue)} >
-                                        { dataSource.map((item, key)=>(
-                                            <Picker.Item label={item} key={key} />)
-                                        )}
-                                    </Picker>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Picker
+                                            selectedValue={pickerValueHolder}
+                                            onValueChange={(itemValue, itemIndex) => setPickerValueHolder(itemValue)}
+                                            mode={"dropdown"}
+                                            style={styles.picker}
+                                        >
+                                            { dataSource.map((item, key)=>(
+                                                <Picker.Item label={item.morada} value={item.cod_escritorio} key={key} />)
+                                            )}
+                                        </Picker>
+                                        <BouncyCheckbox
+                                            size={25}
+                                            fillColor={theme.colors.button.background}
+                                            text="Administrador"
+                                            textStyle={{
+                                                textDecorationLine: "none",
+                                              }}
+                                            style={styles.checkbox}
+                                            iconStyle={{ borderColor: "black" }}
+                                            onPress={(isChecked) => {
+                                                if(isChecked) {
+                                                    setGrupo("Administrador")
+                                                } else {
+                                                    setGrupo("Utilizador")
+                                                }
+                                            }}
+                                        />
+                                    </View>
                                 </View>
-                                <View style={{alignItems: 'center', flex: 2, flexDirection: 'column', justifyContent: 'center'}}>
+                                <View style={{alignItems: 'center', flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
                             {isLoading &&
                                 <ActivityIndicator color={"#28a745"} size={'large'}/>
                             }
@@ -340,6 +341,14 @@ const styles = StyleSheet.create({
         paddingLeft: 1,
         color: '#000000',
         borderBottomWidth: 1
+    },
+    picker: {
+        color: '#000000',
+        marginLeft: "1%",
+        width: "50%"
+    },
+    checkbox: {
+        marginLeft: "7%",
     },
     inputNome: {
         paddingLeft: 1,
