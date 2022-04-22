@@ -40,7 +40,7 @@ export const AddUser = ({navigation}) => {
     const [isRendering, setRendering] = useState(false)
 
     const [dataSource, setDataSource] = useState([]);
-    const [pickerValueHolder, setPickerValueHolder] = useState(' ');
+    const [pickerValueHolder, setPickerValueHolder] = useState(null);
 
     const emailInput = React.createRef();
     const nomeInput = React.createRef();
@@ -110,6 +110,7 @@ export const AddUser = ({navigation}) => {
 
     const guardar = () => {
         if (validar()) {
+            
             setLoading(true)
             const cod_escritorio = escritorioService.findOne(pickerValueHolder)
 
@@ -120,9 +121,9 @@ export const AddUser = ({navigation}) => {
                 grupo: grupo,
                 username: username,
                 pass: password,
-                cod_escritorio: cod_escritorio,
+                cod_escritorio: pickerValueHolder,
             }
-            
+            console.log(data)
             userService.registar(data)
                 .then((response) => {
                     setLoading(false)
@@ -231,13 +232,16 @@ export const AddUser = ({navigation}) => {
                                         ref={passwordInput}
                                         maxLength={255}
                                     />
-                                    <View style={{flexDirection: 'row'}}>
+                                    <View style={{flexDirection: 'row', marginTop: "-5%"}}>
                                         <Picker
                                             selectedValue={pickerValueHolder}
                                             onValueChange={(itemValue, itemIndex) => setPickerValueHolder(itemValue)}
                                             mode={"dropdown"}
                                             style={styles.picker}
                                         >
+                                            {!pickerValueHolder &&
+                                                <Picker.Item label='Selecione'/>
+                                            }
                                             { dataSource.map((item, key)=>(
                                                 <Picker.Item label={item.morada} value={item.cod_escritorio} key={key} />)
                                             )}
