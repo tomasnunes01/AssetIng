@@ -1,73 +1,55 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import Config from "../../util/Config";
-import stringifySafe from "react-native/Libraries/Utilities/stringifySafe";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import stringifySafe from 'react-native/Libraries/Utilities/stringifySafe';
+import Config from '../../util/Config';
 
 class UserService {
-    async registar(data){
-        return axios({
-            url: Config.API_URL+"conta/registar",
-            method: "POST",
-            timeout: Config.TIMEOUT_REQUEST,
-            data: data,
-            headers: Config.HEADER_REQUEST
-        }).then((response) => {
-            return Promise.resolve(response)
-        }).catch((error) => {
-            return Promise.reject(error)
-        })
-    }
+  constructor(config) {
+    const {
+      API_URL: baseURL,
+      TIMEOUT_REQUEST: timeout,
+      HEADER_REQUEST: headers,
+    } = config;
+    this.client = axios.create({
+      baseURL,
+      timeout,
+      headers,
+    });
+  }
 
-    async getUserData(data){
-        await axios.get(Config.API_URL + 'conta/getUserData', {
-                params: {
-                    username: data
-                }
-            })
-            .then(function (response) {
-                AsyncStorage.setItem("GRUPO", response.data.grupo)
-                AsyncStorage.setItem("NOME", response.data.nome)
-                AsyncStorage.setItem("APELIDO", response.data.apelido)
-                AsyncStorage.setItem("EMAIL", response.data.email)
-                AsyncStorage.setItem("ID", stringifySafe(response.data.id))
-                AsyncStorage.setItem("USERNAME", data)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
+  async registar(data) {
+    await this.client.post('conta/registar', data);
+  }
 
-    async login(data) {
-        return axios({
-            url: Config.API_URL + "conta/login",
-            method: "POST",
-            timeout: Config.TIMEOUT_REQUEST,
-            data: data,
-            headers: Config.HEADER_REQUEST
-        }).then(async (response) => {
-            await this.getUserData(data.username)
-            AsyncStorage.setItem("TOKEN", response.data.access_token)
-            return Promise.resolve(response)
-        }).catch((error) => {
-            return Promise.reject(error)
-        })
-    }
+  async getUserData(data) {
+    const {
+      data: { grupo, nome, apelido, email, id },
+    } = await this.client.get('conta/getUserData', {
+      params: {
+        username: data,
+      },
+    });
+    AsyncStorage.setItem('GRUPO', grupo);
+    AsyncStorage.setItem('NOME', nome);
+    AsyncStorage.setItem('APELIDO', apelido);
+    AsyncStorage.setItem('EMAIL', email);
+    AsyncStorage.setItem('ID', stringifySafe(id));
+  }
 
-    async atualizar(data){
-        return axios({
-            url: Config.API_URL+"conta/myAccountUpdate",
-            method: "PATCH",
-            timeout: Config.TIMEOUT_REQUEST,
-            data: data,
-            headers: Config.HEADER_REQUEST
-        }).then(async (response) => {
-            await this.getUserData(data.username)
-            return Promise.resolve(response)
-        }).catch((error) => {
-            return Promise.reject(error)
-        })
-    }
+  async login(data) {
+    const { username } = data;
+    const {
+      data: { access_token: accessToken },
+    } = await this.client.post('conta/login', data);
+
+    await this.getUserData(username);
+    AsyncStorage.setItem('TOKEN', accessToken);
+  }
+
+  async atualizar(data) {
+    const { username } = await this.client.patch('conta/myAccountUpdate', data);
+    return this.getUserData(username);
+  }
 }
 
-const userService = new UserService()
-export default userService
+export default new UserService(Config);

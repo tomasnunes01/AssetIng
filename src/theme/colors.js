@@ -1,5 +1,7 @@
 export const colors = {
-    button: {
-        background: "#28a745",
-    },
+  button: {
+    background: '#28a745',
+  },
 };
+
+export default { colors };

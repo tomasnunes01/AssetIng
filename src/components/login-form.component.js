@@ -1,7 +1,6 @@
-import React from "react";
-import styled from "styled-components/native";
-import {Text, View} from "react-native";
-
+import React from 'react';
+import styled from 'styled-components/native';
+import { Text, View } from 'react-native';
 
 const Button = styled(Text)`
   text-align: center;
