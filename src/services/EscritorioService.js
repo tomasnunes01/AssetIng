@@ -2,19 +2,23 @@ import axios from 'axios';
 import Config from '../../util/Config';
 
 class EscritorioService {
+  constructor(config) {
+    const { API_URL: baseURL } = config;
+    this.client = axios.create({ baseURL });
+  }
+
   async findAll() {
-    const { data } = await axios.get(Config.API_URL + 'escritorio/findAll');
+    const { data } = await this.client.get('escritorio/findAll');
     return data;
   }
 
-  async findOne(cod_escritorio) {
-    const { data } = await axios.get(Config.API_URL + 'escritorio/findOne', {
+  async findOne(id) {
+    const { data } = await this.client.get('escritorio/findOne', {
       params: {
-        cod_escritorio: cod_escritorio,
+        cod_escritorio: id,
       },
     });
     return data;
   }
 }
-const escritorioService = new EscritorioService();
-export default escritorioService;
+export default new EscritorioService(Config);

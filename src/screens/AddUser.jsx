@@ -13,16 +13,16 @@ import { Input, Text } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useTheme } from 'react-native-paper';
-import { FormButton, FormButtonView } from '../components/login-form.component';
 import { ThemeProvider } from 'styled-components/native';
+import { Picker } from '@react-native-picker/picker';
+import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
-import { Picker } from '@react-native-picker/picker';
 import EscritorioService from '../services/EscritorioService';
 import Config from '../../util/Config';
 import escritorioService from '../services/EscritorioService';
 
-export const AddUser = ({ navigation }) => {
+export function AddUser({ navigation }) {
   const { colors } = useTheme();
 
   const [email, setEmail] = useState(null);
@@ -121,14 +121,14 @@ export const AddUser = ({ navigation }) => {
       setLoading(true);
       const cod_escritorio = escritorioService.findOne(pickerValueHolder);
 
-      let data = {
-        email: email,
-        nome: nome,
-        apelido: apelido,
-        grupo: grupo,
-        username: username,
+      const data = {
+        email,
+        nome,
+        apelido,
+        grupo,
+        username,
         pass: password,
-        cod_escritorio: cod_escritorio,
+        cod_escritorio,
       };
 
       userService
@@ -164,9 +164,7 @@ export const AddUser = ({ navigation }) => {
             },
           ]}
         >
-          {isRendering && (
-            <ActivityIndicator color={'#28a745'} size={'large'} />
-          )}
+          {isRendering && <ActivityIndicator color="#28a745" size="large" />}
           {!isRendering && (
             <>
               <View
@@ -242,7 +240,7 @@ export const AddUser = ({ navigation }) => {
                     setPassword(value);
                     setErrorPassword(null);
                   }}
-                  secureTextEntry={true}
+                  secureTextEntry
                   inputContainerStyle={styles.input}
                   autoCapitalize="none"
                   errorMessage={errorPassword}
@@ -256,7 +254,7 @@ export const AddUser = ({ navigation }) => {
                     onValueChange={(itemValue, itemIndex) =>
                       setPickerValueHolder(itemValue)
                     }
-                    mode={'dropdown'}
+                    mode="dropdown"
                     style={styles.picker}
                   >
                     {dataSource.map((item, key) => (
@@ -295,7 +293,7 @@ export const AddUser = ({ navigation }) => {
                 }}
               >
                 {isLoading && (
-                  <ActivityIndicator color={'#28a745'} size={'large'} />
+                  <ActivityIndicator color="#28a745" size="large" />
                 )}
                 {!isLoading && (
                   <TouchableOpacity
@@ -323,7 +321,7 @@ export const AddUser = ({ navigation }) => {
       </KeyboardAvoidingView>
     </ThemeProvider>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -13,12 +13,12 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
-import { FormButton, FormButtonView } from '../components/login-form.component';
 import { ThemeProvider } from 'styled-components/native';
+import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
 
-export const SignInScreen = ({ navigation }) => {
+export function SignInScreen({ navigation }) {
   const { colors } = useTheme();
 
   const [username, setUsername] = useState(null);
@@ -26,9 +26,9 @@ export const SignInScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
 
   const entrar = () => {
-    let data = {
-      username: username,
-      password: password,
+    const data = {
+      username,
+      password,
     };
     setLoading(true);
 
@@ -92,7 +92,7 @@ export const SignInScreen = ({ navigation }) => {
               placeholder="Introduza a palavra-passe"
               placeholderTextColor="#686868"
               onChangeText={(value) => setPassword(value)}
-              secureTextEntry={true}
+              secureTextEntry
               style={[styles.textInput]}
               autoCapitalize="none"
             />
@@ -111,9 +111,7 @@ export const SignInScreen = ({ navigation }) => {
               justifyContent: 'center',
             }}
           >
-            {isLoading && (
-              <ActivityIndicator color={'#28a745'} size={'large'} />
-            )}
+            {isLoading && <ActivityIndicator color="#28a745" size="large" />}
             {!isLoading && (
               <TouchableOpacity
                 style={{ width: '65%', marginBottom: '3%' }}
@@ -129,7 +127,7 @@ export const SignInScreen = ({ navigation }) => {
       </View>
     </ThemeProvider>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

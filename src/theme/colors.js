@@ -3,3 +3,5 @@ export const colors = {
     background: '#28a745',
   },
 };
+
+export default { colors };

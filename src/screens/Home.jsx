@@ -4,9 +4,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AddUser } from './AddUser';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AddUser } from './AddUser';
 import { theme } from '../theme';
 
 const logout = async (navigation) => {
@@ -54,7 +54,7 @@ function Sair({ navigation }) {
 
 const Tab = createBottomTabNavigator();
 
-export const HomeScreen = () => {
+export function HomeScreen() {
   const [isAdmin, setAdmin] = useState(null);
   useEffect(() => {
     AsyncStorage.getItem('GRUPO').then((grupo) => {
@@ -116,7 +116,7 @@ export const HomeScreen = () => {
       />
     </Tab.Navigator>
   );
-};
+}
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',

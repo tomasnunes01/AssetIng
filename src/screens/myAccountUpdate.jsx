@@ -7,19 +7,89 @@ import {
   StatusBar,
   Alert,
   KeyboardAvoidingView,
-  ScrollView,
-  Button,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
-import { FormButton, FormButtonView } from '../components/login-form.component';
 import { ThemeProvider } from 'styled-components/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const MyAccountUpdate = ({ navigation }) => {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#28a745',
+  },
+  header: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+  },
+  footer: {
+    flex: 4,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  text_header: {
+    color: '#fff',
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.title,
+  },
+  text_footer: {
+    color: '#05375a',
+    fontSize: 18,
+  },
+  action: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingBottom: 5,
+  },
+  actionError: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FF0000',
+    paddingBottom: 5,
+  },
+  input: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+  },
+  inputNome: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+    width: '45%',
+  },
+  inputApelido: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+    width: '45%',
+    marginLeft: '-50%',
+  },
+  errorStyle: {
+    marginLeft: 0,
+  },
+  erroApelido: {
+    marginLeft: '-50%',
+  },
+  errorMsg: {
+    color: '#FF0000',
+    fontSize: 14,
+  },
+});
+
+export function MyAccountUpdate({ navigation }) {
   const { colors } = useTheme();
 
   const [id, setID] = useState(null);
@@ -116,12 +186,12 @@ export const MyAccountUpdate = ({ navigation }) => {
     if (validar()) {
       setLoading(true);
 
-      let data = {
-        id: id,
-        email: email,
-        nome: nome,
-        apelido: apelido,
-        username: username,
+      const data = {
+        id,
+        email,
+        nome,
+        apelido,
+        username,
         pass: password,
       };
 
@@ -132,7 +202,7 @@ export const MyAccountUpdate = ({ navigation }) => {
           const titulo = response.data.status ? 'Sucesso' : 'Erro';
           Alert.alert(titulo, response.data.mensagem);
         })
-        .catch((error) => {
+        .catch(() => {
           setLoading(false);
           Alert.alert(
             'Erro',
@@ -145,7 +215,7 @@ export const MyAccountUpdate = ({ navigation }) => {
   return (
     <ThemeProvider theme={theme}>
       <KeyboardAvoidingView
-        behaviour={Platform.OS == 'ios' ? 'padding' : 'height'}
+        behaviour={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
         <StatusBar backgroundColor="#28a745" barStyle="light-content" />
@@ -238,7 +308,7 @@ export const MyAccountUpdate = ({ navigation }) => {
                 setPassword(value);
                 setErrorPassword(null);
               }}
-              secureTextEntry={true}
+              secureTextEntry
               inputContainerStyle={styles.input}
               autoCapitalize="none"
               errorMessage={errorPassword}
@@ -258,7 +328,7 @@ export const MyAccountUpdate = ({ navigation }) => {
             {isLoading && (
               <ActivityIndicator
                 color={theme.colors.button.background}
-                size={'large'}
+                size="large"
               />
             )}
             {!isLoading && (
@@ -285,76 +355,6 @@ export const MyAccountUpdate = ({ navigation }) => {
       </KeyboardAvoidingView>
     </ThemeProvider>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#28a745',
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-  },
-  footer: {
-    flex: 4,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  text_header: {
-    color: '#fff',
-    fontWeight: theme.fontWeights.bold,
-    fontSize: theme.fontSizes.title,
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  input: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-  },
-  inputNome: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-    width: '45%',
-  },
-  inputApelido: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-    width: '45%',
-    marginLeft: '-50%',
-  },
-  errorStyle: {
-    marginLeft: 0,
-  },
-  erroApelido: {
-    marginLeft: '-50%',
-  },
-  errorMsg: {
-    color: '#FF0000',
-    fontSize: 14,
-  },
-});
+export default MyAccountUpdate;

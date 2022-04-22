@@ -12,3 +12,5 @@ export const theme = {
   lineHeights,
   sizes,
 };
+
+export default { theme };

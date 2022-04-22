@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "format": "prettier --write {src,util}/**/*.js"
+    "format": "prettier --write \"{src,util}/**/*.{js,jsx}\"",
+    "lint": "eslint --fix \"{src,util}/**/*.{js,jsx}\""
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
@@ -40,6 +41,14 @@
     "@babel/core": "^7.12.9",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
     "prettier": "^2.6.2",
     "typescript": "~4.3.5"
   },
