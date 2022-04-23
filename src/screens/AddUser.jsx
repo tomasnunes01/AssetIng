@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
+import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useTheme } from 'react-native-paper';
@@ -19,10 +20,92 @@ import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
 import EscritorioService from '../services/EscritorioService';
-import Config from '../../util/Config';
-import escritorioService from '../services/EscritorioService';
 
-export function AddUser({ navigation }) {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#28a745',
+  },
+  header: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+  },
+  footer: {
+    flex: 4,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  text_header: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  text_footer: {
+    color: '#05375a',
+    fontSize: 18,
+  },
+  action: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingBottom: 5,
+  },
+  actionError: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FF0000',
+    paddingBottom: 5,
+  },
+  input: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+  },
+  picker: {
+    color: '#000000',
+    marginLeft: '1%',
+    width: '50%',
+  },
+  checkbox: {
+    marginLeft: '7%',
+  },
+  inputNome: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+    width: '45%',
+  },
+  inputApelido: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+    width: '45%',
+    marginLeft: '-50%',
+  },
+  errorStyle: {
+    marginLeft: 0,
+  },
+  erroApelido: {
+    marginLeft: '-50%',
+  },
+  errorMsg: {
+    color: '#FF0000',
+    fontSize: 14,
+  },
+});
+
+export default function AddUser({ navigation }) {
+  AddUser.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    navigation: PropTypes.object.isRequired,
+  };
   const { colors } = useTheme();
 
   const [email, setEmail] = useState(null);
@@ -40,12 +123,12 @@ export function AddUser({ navigation }) {
   const [isRendering, setRendering] = useState(false);
 
   const [dataSource, setDataSource] = useState([]);
-  const [pickerValueHolder, setPickerValueHolder] = useState(' ');
+  const [pickerValueHolder, setPickerValueHolder] = useState(null);
 
   const emailInput = React.createRef();
   const nomeInput = React.createRef();
   const apelidoInput = React.createRef();
-  const contactoInput = React.createRef();
+  // const contactoInput = React.createRef();
   const passwordInput = React.createRef();
   const usernameInput = React.createRef();
 
@@ -56,12 +139,12 @@ export function AddUser({ navigation }) {
   const reUsername =
     /^(?=.{3,16}$)[a-zA-Z]+((['-ç`´~^][a-zA-Z ])+[ a-zA-Z ]?[a-zA-Z ]*\b)*$/;
   const rePass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,255}$/;
-  const reContactoPT =
+  /* const reContactoPT =
     /^(\+351)?(?:9[1-36][0-9]|2[12][0-9]|2[35][1-689]|24[1-59]|26[1-35689]|27[1-9]|28[1-69]|29[1256])[0-9]{6}$/;
   const reContactoUK =
     /^\s*((0044[ ]?|0)[ ]?20[ ]?[7,8]{1}?[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{4})|((0044[ ]?|0[1-8]{1})[0-9]{1,2}[ ]?[1-9]{1}[0-9]{2}[ ]?([0-9]{6}|[0-9]{5}|[0-9]{4}))|(0[1-8]{1}[0-9]{3}[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{2,3})|(0800[ ]?([1-9]{3}[ ]?[1-9]{4}|[1-9]{6}|[1-9]{4}))|(09[0-9]{1}[ ]?[0-9]{1}[ ]?([1-9]{4}|[1-9]{6}|[1-9]{3}[ ]?[1-9]{4}))\s*$/;
   const reContactoBR =
-    /(?:^\([0]?[1-9]{2}\)|^[0]?[1-9]{2}[\.-\s]?)[9]?[1-9]\d{3}[\.-\s]?\d{4}$/;
+    /(?:^\([0]?[1-9]{2}\)|^[0]?[1-9]{2}[\.-\s]?)[9]?[1-9]\d{3}[\.-\s]?\d{4}$/; */
 
   useEffect(async () => {
     try {
@@ -69,7 +152,8 @@ export function AddUser({ navigation }) {
       setRendering(false);
       setDataSource(response);
     } catch (error) {
-      console.err(error);
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   }, []);
 
@@ -119,7 +203,6 @@ export function AddUser({ navigation }) {
   const guardar = () => {
     if (validar()) {
       setLoading(true);
-      const cod_escritorio = escritorioService.findOne(pickerValueHolder);
 
       const data = {
         email,
@@ -128,7 +211,7 @@ export function AddUser({ navigation }) {
         grupo,
         username,
         pass: password,
-        cod_escritorio,
+        cod_escritorio: pickerValueHolder,
       };
 
       userService
@@ -140,7 +223,7 @@ export function AddUser({ navigation }) {
         })
         .catch((error) => {
           setLoading(false);
-          Alert.alert('Erro:', 'error');
+          Alert.alert('Erro:', error);
         });
     }
   };
@@ -148,7 +231,7 @@ export function AddUser({ navigation }) {
   return (
     <ThemeProvider theme={theme}>
       <KeyboardAvoidingView
-        behaviour={Platform.OS == 'ios' ? 'padding' : 'height'}
+        behaviour={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
         <StatusBar backgroundColor="#28a745" barStyle="light-content" />
@@ -248,20 +331,21 @@ export function AddUser({ navigation }) {
                   ref={passwordInput}
                   maxLength={255}
                 />
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', marginTop: '-5%' }}>
                   <Picker
                     selectedValue={pickerValueHolder}
-                    onValueChange={(itemValue, itemIndex) =>
+                    onValueChange={(itemValue) =>
                       setPickerValueHolder(itemValue)
                     }
                     mode="dropdown"
                     style={styles.picker}
                   >
-                    {dataSource.map((item, key) => (
+                    {!pickerValueHolder && <Picker.Item label="Selecione" />}
+                    {dataSource.map((item) => (
                       <Picker.Item
                         label={item.morada}
                         value={item.cod_escritorio}
-                        key={key}
+                        key={item.cod_escritorio}
                       />
                     ))}
                   </Picker>
@@ -322,83 +406,3 @@ export function AddUser({ navigation }) {
     </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#28a745',
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-  },
-  footer: {
-    flex: 4,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30,
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  input: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-  },
-  picker: {
-    color: '#000000',
-    marginLeft: '1%',
-    width: '50%',
-  },
-  checkbox: {
-    marginLeft: '7%',
-  },
-  inputNome: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-    width: '45%',
-  },
-  inputApelido: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-    width: '45%',
-    marginLeft: '-50%',
-  },
-  errorStyle: {
-    marginLeft: 0,
-  },
-  erroApelido: {
-    marginLeft: '-50%',
-  },
-  errorMsg: {
-    color: '#FF0000',
-    fontSize: 14,
-  },
-});

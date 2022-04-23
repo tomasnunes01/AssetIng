@@ -3,36 +3,37 @@ import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SignInScreen } from "./src/screens/Login";
-import { HomeScreen } from "./src/screens/Home";
-import { AddUser } from "./src/screens/AddUser";
-import {MyAccountUpdate} from "./src/screens/myAccountUpdate";
+import Login from './src/screens/Login';
+import { HomeScreen } from './src/screens/Home';
+import AddUser from './src/screens/AddUser';
+import { MyAccountUpdate } from './src/screens/myAccountUpdate';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
-    return (
-        <Stack.Navigator
-            screenOptions={{
-            headerShown: false
-        }}>
-            <Stack.Screen name="Login" component={SignInScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="AddUser" component={AddUser} />
-            <Stack.Screen name="ChangeAccount" component={MyAccountUpdate} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="AddUser" component={AddUser} />
+      <Stack.Screen name="ChangeAccount" component={MyAccountUpdate} />
+    </Stack.Navigator>
+  );
 }
 
 export default function App() {
   return (
     <NavigationContainer>
-        <MyStack />
-        <ExpoStatusBar style="auto" />
+      <MyStack />
+      <ExpoStatusBar style="auto" />
     </NavigationContainer>
   );
 }
-/*function HomeScreen({ navigation }) {
+/* function HomeScreen({ navigation }) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button
@@ -62,5 +63,4 @@ export default function App() {
             </Drawer.Navigator>
         </NavigationContainer>
     );
-}*/
-
+} */

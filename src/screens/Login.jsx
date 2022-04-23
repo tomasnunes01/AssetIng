@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import PropTypes from 'prop-types';
 import Feather from 'react-native-vector-icons/Feather';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 import { ThemeProvider } from 'styled-components/native';
@@ -18,7 +19,66 @@ import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
 
-export function SignInScreen({ navigation }) {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#28a745',
+  },
+  header: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+  },
+  footer: {
+    flex: 4,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  text_header: {
+    color: '#fff',
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.title,
+  },
+  text_footer: {
+    color: '#05375a',
+    fontSize: 18,
+  },
+  action: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingBottom: 5,
+  },
+  actionError: {
+    flexDirection: 'row',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FF0000',
+    paddingBottom: 5,
+  },
+  textInput: {
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? 0 : -5,
+    paddingLeft: 10,
+    color: '#000000',
+  },
+  errorMsg: {
+    color: '#FF0000',
+    fontSize: 14,
+  },
+});
+
+export default function SignInScreen({ navigation }) {
+  SignInScreen.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    navigation: PropTypes.object.isRequired,
+  };
+
   const { colors } = useTheme();
 
   const [username, setUsername] = useState(null);
@@ -34,24 +94,20 @@ export function SignInScreen({ navigation }) {
 
     userService
       .login(data)
-      .then((response) => {
+      .then(() => {
         setLoading(false);
         navigation.reset({
           index: 0,
           routes: [{ name: 'Home' }],
         });
       })
-      .catch((error) => {
+      .catch(() => {
         Alert.alert(
           'As credenciais são inválidas',
           'Valide as credenciais e tente novamente',
         );
         setLoading(false);
       });
-  };
-
-  const addUser = () => {
-    navigation.navigate('AddUser');
   };
 
   return (
@@ -128,57 +184,3 @@ export function SignInScreen({ navigation }) {
     </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#28a745',
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-  },
-  footer: {
-    flex: 4,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  text_header: {
-    color: '#fff',
-    fontWeight: theme.fontWeights.bold,
-    fontSize: theme.fontSizes.title,
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -5,
-    paddingLeft: 10,
-    color: '#000000',
-  },
-  errorMsg: {
-    color: '#FF0000',
-    fontSize: 14,
-  },
-});

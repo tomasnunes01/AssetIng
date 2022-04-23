@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
+import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 import { ThemeProvider } from 'styled-components/native';
@@ -90,6 +91,10 @@ const styles = StyleSheet.create({
 });
 
 export function MyAccountUpdate({ navigation }) {
+  MyAccountUpdate.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    navigation: PropTypes.object.isRequired,
+  };
   const { colors } = useTheme();
 
   const [id, setID] = useState(null);
