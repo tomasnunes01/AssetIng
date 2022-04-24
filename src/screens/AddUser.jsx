@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
-    paddingBottom: 50,
+    marginTop: -30,
+    paddingBottom: 30,
   },
   footer: {
     flex: 4,
@@ -42,8 +43,8 @@ const styles = StyleSheet.create({
   },
   text_header: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30,
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.title,
   },
   text_footer: {
     color: '#05375a',
@@ -120,7 +121,7 @@ export default function AddUser({ navigation }) {
   const [errorApelido, setErrorApelido] = useState(null);
   const [errorUsername, setErrorUsername] = useState(null);
   const [isLoading, setLoading] = useState(false);
-  const [isRendering, setRendering] = useState(false);
+  const [isRendering, setRendering] = useState(true);
 
   const [dataSource, setDataSource] = useState([]);
   const [pickerValueHolder, setPickerValueHolder] = useState(null);
@@ -128,9 +129,9 @@ export default function AddUser({ navigation }) {
   const emailInput = React.createRef();
   const nomeInput = React.createRef();
   const apelidoInput = React.createRef();
-  // const contactoInput = React.createRef();
   const passwordInput = React.createRef();
   const usernameInput = React.createRef();
+  const pickerInput = React.createRef();
 
   const reEmail =
     /^(?=.{3,30}$)(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -197,6 +198,12 @@ export default function AddUser({ navigation }) {
       passwordInput.current.shake();
       passwordInput.current.focus();
     }
+    if (!pickerValueHolder) {
+      if (!erro) {
+        pickerInput.current.focus();
+      }
+      erro = true;
+    }
     return !erro;
   };
 
@@ -220,10 +227,17 @@ export default function AddUser({ navigation }) {
           setLoading(false);
           const titulo = response.data.status ? 'Sucesso' : 'Erro';
           Alert.alert(titulo, response.data.mensagem);
+          setEmail(null);
+          setNome(null);
+          setApelido(null);
+          setGrupo(null);
+          setUsername(null);
+          setPassword(null);
+          setPickerValueHolder(null);
         })
         .catch((error) => {
           setLoading(false);
-          Alert.alert('Erro:', error);
+          Alert.alert('Erro:', error.message);
         });
     }
   };
@@ -236,7 +250,7 @@ export default function AddUser({ navigation }) {
       >
         <StatusBar backgroundColor="#28a745" barStyle="light-content" />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Adicionar utilizador</Text>
+          <Text style={styles.text_header}>Adicionar Conta</Text>
         </View>
         <Animatable.View
           animation="fadeInUpBig"
@@ -264,6 +278,7 @@ export default function AddUser({ navigation }) {
                     setEmail(value);
                     setErrorEmail(null);
                   }}
+                  value={email}
                   keyboardType="email-address"
                   inputContainerStyle={styles.input}
                   autoCapitalize="none"
@@ -280,6 +295,7 @@ export default function AddUser({ navigation }) {
                       setNome(value);
                       setErrorNome(null);
                     }}
+                    value={nome}
                     inputContainerStyle={styles.inputNome}
                     autoCapitalize="words"
                     errorMessage={errorNome}
@@ -294,6 +310,7 @@ export default function AddUser({ navigation }) {
                       setApelido(value);
                       setErrorApelido();
                     }}
+                    value={apelido}
                     inputContainerStyle={styles.inputApelido}
                     autoCapitalize="words"
                     errorMessage={errorApelido}
@@ -309,6 +326,7 @@ export default function AddUser({ navigation }) {
                     setUsername(value);
                     setErrorUsername(null);
                   }}
+                  value={username}
                   inputContainerStyle={styles.input}
                   autoCapitalize="none"
                   errorMessage={errorUsername}
@@ -323,6 +341,7 @@ export default function AddUser({ navigation }) {
                     setPassword(value);
                     setErrorPassword(null);
                   }}
+                  value={password}
                   secureTextEntry
                   inputContainerStyle={styles.input}
                   autoCapitalize="none"
@@ -339,6 +358,7 @@ export default function AddUser({ navigation }) {
                     }
                     mode="dropdown"
                     style={styles.picker}
+                    ref={pickerInput}
                   >
                     {!pickerValueHolder && <Picker.Item label="Selecione" />}
                     {dataSource.map((item) => (
@@ -381,7 +401,7 @@ export default function AddUser({ navigation }) {
                 )}
                 {!isLoading && (
                   <TouchableOpacity
-                    style={{ width: '65%', marginBottom: '3%' }}
+                    style={{ width: '65%', marginBottom: '-5%' }}
                     onPress={() => guardar()}
                   >
                     <FormButtonView>
@@ -389,15 +409,6 @@ export default function AddUser({ navigation }) {
                     </FormButtonView>
                   </TouchableOpacity>
                 )}
-                <TouchableOpacity
-                  onPress={() => navigation.goBack()}
-                  style={{
-                    width: '35%',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text>Cancelar</Text>
-                </TouchableOpacity>
               </View>
             </>
           )}

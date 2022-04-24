@@ -154,7 +154,7 @@ export default function SignInScreen({ navigation }) {
             />
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('ListUsers')}>
             <Text style={{ color: '#009387', marginTop: 15 }}>
               Esqueceu-se da palavra-passe?
             </Text>

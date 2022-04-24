@@ -18,17 +18,19 @@ class UserService {
   }
 
   async registar(data) {
-    await this.client.post('conta/registar', data);
+    const req = await this.client.post('conta/registar', data);
+    return req.data;
   }
 
-  async getUserData(data) {
+  async getUserData(username) {
     const {
       data: { grupo, nome, apelido, email, id },
     } = await this.client.get('conta/getUserData', {
       params: {
-        username: data,
+        username,
       },
     });
+    AsyncStorage.setItem('USERNAME', username);
     AsyncStorage.setItem('GRUPO', grupo);
     AsyncStorage.setItem('NOME', nome);
     AsyncStorage.setItem('APELIDO', apelido);
@@ -49,6 +51,11 @@ class UserService {
   async atualizar(data) {
     const { username } = await this.client.patch('conta/myAccountUpdate', data);
     return this.getUserData(username);
+  }
+
+  async listar() {
+    const { data } = await this.client.get('conta/findAll');
+    return data;
   }
 }
 

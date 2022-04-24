@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddUser from './AddUser';
+import ListUsers from './ListUser';
 import { theme } from '../theme';
 
 const logo = require('../../assets/logo2.png');
@@ -64,14 +65,6 @@ function Home({ navigation }) {
   );
 }
 
-function Sair() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
-
 const Tab = createBottomTabNavigator();
 
 const tabBarIconHome = ({ color, size }) => (
@@ -123,10 +116,10 @@ export function HomeScreen() {
         />
       )}
       <Tab.Screen
-        name="Editar Conta"
-        component={Sair}
+        name="Contas"
+        component={ListUsers}
         options={{
-          tabBarLabel: 'Editar conta',
+          tabBarLabel: 'contas',
           tabBarIcon: tabBarIconEdit,
         }}
       />
