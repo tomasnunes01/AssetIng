@@ -5,9 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './src/screens/Login';
 import { HomeScreen } from './src/screens/Home';
-import AddUser from './src/screens/AddUser';
-import { MyAccountUpdate } from './src/screens/myAccountUpdate';
-import ListUsers from './src/screens/ListUser';
+import AddUser from './src/screens/user/AddUser';
+import { MyAccountUpdate } from './src/screens/user/myAccountUpdate';
+import ListUsers from './src/screens/user/ListUsers';
 
 const Stack = createStackNavigator();
 
