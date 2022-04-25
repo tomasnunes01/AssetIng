@@ -14,9 +14,12 @@ import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 import { ThemeProvider } from 'styled-components/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FormButton, FormButtonView } from '../components/login-form.component';
-import { theme } from '../theme';
-import userService from '../services/UserService';
+import {
+  FormButton,
+  FormButtonView,
+} from '../../components/login-form.component';
+import { theme } from '../../theme';
+import userService from '../../services/UserService';
 
 const styles = StyleSheet.create({
   container: {

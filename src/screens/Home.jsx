@@ -7,8 +7,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AddUser from './AddUser';
-import ListUsers from './ListUser';
+import AddUser from './user/AddUser';
+import ListUsers from './user/ListUsers';
 import { theme } from '../theme';
 
 const logo = require('../../assets/logo2.png');

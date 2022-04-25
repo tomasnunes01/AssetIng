@@ -10,16 +10,18 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
-import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useTheme } from 'react-native-paper';
 import { ThemeProvider } from 'styled-components/native';
 import { Picker } from '@react-native-picker/picker';
-import { FormButton, FormButtonView } from '../components/login-form.component';
-import { theme } from '../theme';
-import userService from '../services/UserService';
-import EscritorioService from '../services/EscritorioService';
+import {
+  FormButton,
+  FormButtonView,
+} from '../../components/login-form.component';
+import { theme } from '../../theme';
+import userService from '../../services/UserService';
+import EscritorioService from '../../services/EscritorioService';
 
 const styles = StyleSheet.create({
   container: {
@@ -102,11 +104,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function AddUser({ navigation }) {
-  AddUser.propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
-    navigation: PropTypes.object.isRequired,
-  };
+export default function AddUser() {
   const { colors } = useTheme();
 
   const [email, setEmail] = useState(null);
