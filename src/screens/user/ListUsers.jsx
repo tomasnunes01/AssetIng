@@ -6,18 +6,17 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   ActivityIndicator,
-  FlatList,
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
 import { Text } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
+import PropTypes from 'prop-types';
 import { ThemeProvider } from 'styled-components/native';
-import SwipeView from 'react-native-swipeview';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { theme } from '../../theme';
 import UserService from '../../services/UserService';
-import colors from '../../theme/colors';
+import AccountDetails from './AccountDetails';
 
 const styles = StyleSheet.create({
   container: {
@@ -124,9 +123,11 @@ export default class ListUsers extends React.Component {
 
   render() {
     const { isRendering, dataSource } = this.state;
+    const { navigation } = this.props;
+
     const renderItem = ({ item }) => (
       <TouchableHighlight
-        onPress={() => console.log('You touched me')}
+        onPress={() => navigation.navigate('AccountDetails')}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
       >
@@ -140,7 +141,7 @@ export default class ListUsers extends React.Component {
         </View>
       </TouchableHighlight>
     );
-    const renderHiddenItem = (data, rowMap) => (
+    const renderHiddenItem = () => (
       <View style={styles.rowBack}>
         <Text>Left</Text>
         <TouchableOpacity
@@ -170,44 +171,8 @@ export default class ListUsers extends React.Component {
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && <ActivityIndicator color="#28a745" size="large" />}
             {!isRendering && (
-              /* <View style={[{ paddingVertical: 20 }]}>
-                <FlatList
-                  data={dataSource}
-                  keyExtractor={({ id }) => id}
-                  style={styles.list}
-                  renderItem={({ item }) => (
-                    <SwipeView
-                      key={item.id}
-                      rightOpenValue={100}
-                      onSwipedLeft={() => alert('deleted')}
-                      swipeDuration={300}
-                      swipeToOpenPercent={40}
-                      renderVisibleContent={() => (
-                        <View>
-                          <Text style={styles.listItem}>
-                            {item.nome} {item.apelido}
-                          </Text>
-                          <Text style={styles.sublistItem}>
-                            {item.username} - {item.email} - {item.grupo}
-                          </Text>
-                        </View>
-                      )}
-                    />
-                  )}
-                />
-              </View> */
               <SwipeListView
                 data={dataSource}
-                /* renderItem={({ item }) => (
-                  <View key={item.id}>
-                    <Text style={styles.listItem}>
-                      {item.nome} {item.apelido}
-                    </Text>
-                    <Text style={styles.sublistItem}>
-                      {item.username} - {item.email} - {item.grupo}
-                    </Text>
-                  </View>
-                )} */
                 renderItem={renderItem}
                 renderHiddenItem={renderHiddenItem}
                 leftOpenValue={75}
@@ -220,3 +185,7 @@ export default class ListUsers extends React.Component {
     );
   }
 }
+ListUsers.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  navigation: PropTypes.object.isRequired,
+};

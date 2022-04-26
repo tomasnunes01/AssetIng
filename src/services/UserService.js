@@ -57,6 +57,13 @@ class UserService {
     const { data } = await this.client.get('conta/findAll');
     return data;
   }
+
+  async findByID(id) {
+    const { data } = await this.client.get('conta/findByID', {
+      params: { id },
+    });
+    return data;
+  }
 }
 
 export default new UserService(Config);
