@@ -9,6 +9,7 @@ import AddUser from './src/screens/user/AddUser';
 import { MyAccountUpdate } from './src/screens/user/myAccountUpdate';
 import ListUsers from './src/screens/user/ListUsers';
 import AccountDetails from './src/screens/user/AccountDetails';
+import ChangeAccount from './src/screens/user/ChangeAccount';
 
 const Stack = createStackNavigator();
 
@@ -23,8 +24,9 @@ function MyStack() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="AddUser" component={AddUser} />
       <Stack.Screen name="ChangeAccount" component={MyAccountUpdate} />
-      <Stack.Screen name="ListUsers" component={ListUsers}/>
-      <Stack.Screen name="AccountDetails" component={AccountDetails}/>
+      <Stack.Screen name="ListUsers" component={ListUsers} />
+      <Stack.Screen name="AccountDetails" component={AccountDetails} />
+      <Stack.Screen name="ChangeUserAccount" component={ChangeAccount} />
     </Stack.Navigator>
   );
 }

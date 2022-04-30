@@ -12,10 +12,10 @@ class EscritorioService {
     return data;
   }
 
-  async findOne(id) {
-    const { data } = await this.client.get('escritorio/findOne', {
+  async findByID(id) {
+    const { data } = await this.client.get('escritorio/findByID', {
       params: {
-        cod_escritorio: id,
+        id,
       },
     });
     return data;

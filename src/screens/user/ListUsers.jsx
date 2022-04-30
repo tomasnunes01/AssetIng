@@ -8,15 +8,17 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   TouchableHighlight,
+  Alert,
 } from 'react-native';
 import { Text } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import PropTypes from 'prop-types';
 import { ThemeProvider } from 'styled-components/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../theme';
 import UserService from '../../services/UserService';
-import AccountDetails from './AccountDetails';
 
 const styles = StyleSheet.create({
   container: {
@@ -84,17 +86,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 75,
-  },
-  backRightBtnLeft: {
-    backgroundColor: 'blue',
-    right: 75,
+    width: 100,
   },
   backRightBtnRight: {
     backgroundColor: 'red',
     right: 0,
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
+  },
+  backLeftBtn: {
+    backgroundColor: 'orange',
+    left: 0,
+    borderTopLeftRadius: 100,
+    borderBottomLeftRadius: 100,
   },
 });
 
@@ -104,10 +108,24 @@ export default class ListUsers extends React.Component {
     this.state = {
       dataSource: [],
       isRendering: true,
+      isAdmin: false,
     };
   }
 
   componentDidMount() {
+    let grupo = null;
+    AsyncStorage.getItem('GRUPO').then((result) => {
+      grupo = result;
+      if (grupo === 'Administrador') {
+        grupo = true;
+      } else {
+        grupo = false;
+      }
+      this.setState({
+        isRendering: true,
+        isAdmin: grupo,
+      });
+    });
     return UserService.listar()
       .then((data) => {
         this.setState({
@@ -116,18 +134,33 @@ export default class ListUsers extends React.Component {
         });
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
+        console.log(error);
       });
   }
 
   render() {
-    const { isRendering, dataSource } = this.state;
+    const { isRendering, dataSource, isAdmin } = this.state;
     const { navigation } = this.props;
+
+    function updateList() {
+      return UserService.listar()
+        .then((data) => {
+          this.setState({
+            dataSource: data,
+            isRendering: false,
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
 
     const renderItem = ({ item }) => (
       <TouchableHighlight
-        onPress={() => navigation.navigate('AccountDetails')}
+        onPress={() => {
+          navigation.navigate('AccountDetails');
+          AsyncStorage.setItem('ID', item.id.toString());
+        }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
       >
@@ -141,20 +174,34 @@ export default class ListUsers extends React.Component {
         </View>
       </TouchableHighlight>
     );
-    const renderHiddenItem = () => (
+    const renderHiddenItem = ({ item }) => (
       <View style={styles.rowBack}>
-        <Text>Left</Text>
         <TouchableOpacity
-          style={[styles.backRightBtn, styles.backRightBtnLeft]}
-          // onPress={() => closeRow(rowMap, data.item.key)}
+          style={[styles.backRightBtn, styles.backLeftBtn]}
+          onPress={() => {
+            navigation.navigate('ChangeUserAccount');
+            AsyncStorage.setItem('ID', item.id.toString());
+          }}
         >
-          <Text style={styles.backTextWhite}>Close</Text>
+          <Text>
+            <MaterialCommunityIcons name="account-edit" size={25} />
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnRight]}
-          // onPress={() => deleteRow(rowMap, data.item.key)}
+          onPress={() =>
+            UserService.delete(item.id).then((response) => {
+              const titulo = response.status ? 'Sucesso' : 'Erro';
+              Alert.alert(titulo, response.mensagem);
+              /* if (response.status) {
+                updateList();
+              } */
+            })
+          }
         >
-          <Text style={styles.backTextWhite}>Delete</Text>
+          <Text style={styles.backTextWhite}>
+            <MaterialCommunityIcons name="trash-can-outline" size={25} />
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -170,13 +217,21 @@ export default class ListUsers extends React.Component {
           </View>
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && <ActivityIndicator color="#28a745" size="large" />}
-            {!isRendering && (
+            {!isRendering && !isAdmin && (
               <SwipeListView
                 data={dataSource}
                 renderItem={renderItem}
                 renderHiddenItem={renderHiddenItem}
                 leftOpenValue={75}
                 rightOpenValue={-75}
+              />
+            )}
+            {!isRendering && !isAdmin && (
+              <SwipeListView
+                data={dataSource}
+                renderItem={renderItem}
+                disableLeftSwipe
+                disableRightSwipe
               />
             )}
           </Animatable.View>

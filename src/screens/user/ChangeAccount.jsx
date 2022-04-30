@@ -130,7 +130,7 @@ export default function AccountDetails({ navigation }) {
       >
         <StatusBar backgroundColor="#28a745" barStyle="light-content" />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Dados da conta</Text>
+          <Text style={styles.text_header}>Alterar Conta</Text>
         </View>
         {isRendering && <ActivityIndicator color="#28a745" size="large" />}
         {!isRendering && (

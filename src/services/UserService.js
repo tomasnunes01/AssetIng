@@ -64,6 +64,15 @@ class UserService {
     });
     return data;
   }
+
+  async delete(id) {
+    const response = await this.client.delete('conta', {
+      params: {
+        id,
+      },
+    });
+    return response.data;
+  }
 }
 
 export default new UserService(Config);
