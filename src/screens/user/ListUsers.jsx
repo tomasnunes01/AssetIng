@@ -114,7 +114,9 @@ export default class ListUsers extends React.Component {
 
   componentDidMount() {
     let grupo = null;
-    AsyncStorage.getItem('GRUPO').then((result) => {
+    const { navigation } = this.props;
+
+    AsyncStorage.getItem('MYGRUPO').then((result) => {
       grupo = result;
       if (grupo === 'Administrador') {
         grupo = true;
@@ -126,23 +128,31 @@ export default class ListUsers extends React.Component {
         isAdmin: grupo,
       });
     });
-    return UserService.listar()
-      .then((data) => {
-        this.setState({
-          dataSource: data,
-          isRendering: false,
+    this.focusSubscription = navigation.addListener('focus', () => {
+      this.setState({ isRendering: true });
+      UserService.listar()
+        .then((data) => {
+          this.setState({
+            dataSource: data,
+            isRendering: false,
+          });
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    });
+  }
+
+  componentWillUnmount() {
+    this.focusSubscription();
   }
 
   render() {
     const { isRendering, dataSource, isAdmin } = this.state;
     const { navigation } = this.props;
 
-    function updateList() {
+    const updateList = () => {
       return UserService.listar()
         .then((data) => {
           this.setState({
@@ -151,15 +161,16 @@ export default class ListUsers extends React.Component {
           });
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.error(error);
         });
-    }
+    };
 
     const renderItem = ({ item }) => (
       <TouchableHighlight
         onPress={() => {
-          navigation.navigate('AccountDetails');
           AsyncStorage.setItem('ID', item.id.toString());
+          navigation.navigate('AccountDetails');
         }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
@@ -179,8 +190,8 @@ export default class ListUsers extends React.Component {
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
-            navigation.navigate('ChangeUserAccount');
             AsyncStorage.setItem('ID', item.id.toString());
+            navigation.navigate('ChangeUserAccount');
           }}
         >
           <Text>
@@ -193,9 +204,10 @@ export default class ListUsers extends React.Component {
             UserService.delete(item.id).then((response) => {
               const titulo = response.status ? 'Sucesso' : 'Erro';
               Alert.alert(titulo, response.mensagem);
-              /* if (response.status) {
+              if (response.status) {
+                this.setState({ isRendering: true });
                 updateList();
-              } */
+              }
             })
           }
         >
@@ -217,7 +229,7 @@ export default class ListUsers extends React.Component {
           </View>
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && <ActivityIndicator color="#28a745" size="large" />}
-            {!isRendering && !isAdmin && (
+            {!isRendering && isAdmin && (
               <SwipeListView
                 data={dataSource}
                 renderItem={renderItem}

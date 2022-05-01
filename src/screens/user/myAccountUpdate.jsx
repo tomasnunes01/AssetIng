@@ -128,19 +128,19 @@ export function MyAccountUpdate({ navigation }) {
   const rePass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,255}$/;
 
   useEffect(() => {
-    AsyncStorage.getItem('EMAIL').then((fromAsyncEmail) => {
+    AsyncStorage.getItem('MYEMAIL').then((fromAsyncEmail) => {
       setEmail(fromAsyncEmail);
     });
-    AsyncStorage.getItem('NOME').then((fromAsyncNome) => {
+    AsyncStorage.getItem('MYNOME').then((fromAsyncNome) => {
       setNome(fromAsyncNome);
     });
-    AsyncStorage.getItem('APELIDO').then((fromAsyncApelido) => {
+    AsyncStorage.getItem('MYAPELIDO').then((fromAsyncApelido) => {
       setApelido(fromAsyncApelido);
     });
-    AsyncStorage.getItem('USERNAME').then((fromAsyncUsername) => {
+    AsyncStorage.getItem('MYUSERNAME').then((fromAsyncUsername) => {
       setUsername(fromAsyncUsername);
     });
-    AsyncStorage.getItem('ID').then((fromAsyncId) => {
+    AsyncStorage.getItem('MYID').then((fromAsyncId) => {
       setID(fromAsyncId);
     });
   }, []);

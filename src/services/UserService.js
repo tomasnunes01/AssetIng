@@ -30,12 +30,12 @@ class UserService {
         username,
       },
     });
-    AsyncStorage.setItem('USERNAME', username);
-    AsyncStorage.setItem('GRUPO', grupo);
-    AsyncStorage.setItem('NOME', nome);
-    AsyncStorage.setItem('APELIDO', apelido);
-    AsyncStorage.setItem('EMAIL', email);
-    AsyncStorage.setItem('ID', stringifySafe(id));
+    AsyncStorage.setItem('MYUSERNAME', username);
+    AsyncStorage.setItem('MYGRUPO', grupo);
+    AsyncStorage.setItem('MYNOME', nome);
+    AsyncStorage.setItem('MYAPELIDO', apelido);
+    AsyncStorage.setItem('MYEMAIL', email);
+    AsyncStorage.setItem('MYID', stringifySafe(id));
   }
 
   async login(data) {
@@ -49,8 +49,12 @@ class UserService {
   }
 
   async atualizar(data) {
-    const { username } = await this.client.patch('conta/myAccountUpdate', data);
-    return this.getUserData(username);
+    await this.getUserData(data.username);
+    return this.client.patch('conta/AccountUpdate', data);
+  }
+
+  async atualizarConta(data) {
+    return this.client.patch('conta/AccountUpdate', data);
   }
 
   async listar() {

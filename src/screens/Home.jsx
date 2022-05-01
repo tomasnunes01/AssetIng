@@ -80,7 +80,7 @@ const tabBarIconEdit = ({ color, size }) => (
 export function HomeScreen() {
   const [isAdmin, setAdmin] = useState(null);
   useEffect(() => {
-    AsyncStorage.getItem('GRUPO').then((grupo) => {
+    AsyncStorage.getItem('MYGRUPO').then((grupo) => {
       if (grupo === 'Administrador') {
         setAdmin(true);
       } else {
