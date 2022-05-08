@@ -27,7 +27,7 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#28a745',
+    backgroundColor: theme.colors.container.header,
   },
   header: {
     flex: 1,
@@ -256,7 +256,7 @@ export default function AccountDetails({ navigation }) {
     <ThemeProvider theme={theme}>
       {isRendering && (
         <ActivityIndicator
-          color="#28a745"
+          color={theme.colors.button.background}
           size="large"
           style={{ paddingTop: '80%' }}
         />
@@ -266,7 +266,10 @@ export default function AccountDetails({ navigation }) {
           behaviour={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}
         >
-          <StatusBar backgroundColor="#28a745" barStyle="light-content" />
+          <StatusBar
+            backgroundColor={theme.colors.container.header}
+            barStyle="light-content"
+          />
           <View style={styles.header}>
             <Text style={styles.text_header}>Alterar Conta</Text>
           </View>

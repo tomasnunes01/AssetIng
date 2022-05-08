@@ -22,7 +22,7 @@ import userService from '../services/UserService';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#28a745',
+    backgroundColor: theme.colors.container.header,
   },
   header: {
     flex: 1,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSizes.title,
   },
   text_footer: {
-    color: '#05375a',
+    color: '#000',
     fontSize: 18,
   },
   action: {
@@ -98,7 +98,7 @@ export default function SignInScreen({ navigation }) {
         setLoading(false);
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Home' }],
+          routes: [{ name: 'Drawer' }],
         });
       })
       .catch(() => {
@@ -113,7 +113,10 @@ export default function SignInScreen({ navigation }) {
   return (
     <ThemeProvider theme={theme}>
       <View style={styles.container}>
-        <StatusBar backgroundColor="#28a745" barStyle="light-content" />
+        <StatusBar
+          backgroundColor={theme.colors.container.header}
+          barStyle="light-content"
+        />
         <View style={styles.header}>
           <Text style={styles.text_header}>Bem vindo!</Text>
         </View>
@@ -135,7 +138,6 @@ export default function SignInScreen({ navigation }) {
             style={[
               styles.text_footer,
               {
-                color: colors.text,
                 marginTop: 35,
               },
             ]}
@@ -154,8 +156,10 @@ export default function SignInScreen({ navigation }) {
             />
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('ListUsers')}>
-            <Text style={{ color: '#009387', marginTop: 15 }}>
+          <TouchableOpacity onPress={() => navigation.navigate('ListPlaces')}>
+            <Text
+              style={{ color: theme.colors.button.background, marginTop: 15 }}
+            >
               Esqueceu-se da palavra-passe?
             </Text>
           </TouchableOpacity>
@@ -167,7 +171,12 @@ export default function SignInScreen({ navigation }) {
               justifyContent: 'center',
             }}
           >
-            {isLoading && <ActivityIndicator color="#28a745" size="large" />}
+            {isLoading && (
+              <ActivityIndicator
+                color={theme.colors.button.background}
+                size="large"
+              />
+            )}
             {!isLoading && (
               <TouchableOpacity
                 style={{ width: '65%', marginBottom: '3%' }}

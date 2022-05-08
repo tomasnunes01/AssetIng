@@ -24,7 +24,7 @@ import userService from '../../services/UserService';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#28a745',
+    backgroundColor: theme.colors.container.header,
   },
   header: {
     flex: 1,
@@ -226,7 +226,10 @@ export function MyAccountUpdate({ navigation }) {
         behaviour={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <StatusBar backgroundColor="#28a745" barStyle="light-content" />
+        <StatusBar
+          backgroundColor={theme.colors.container.header}
+          barStyle="light-content"
+        />
         <View style={styles.header}>
           <Text style={styles.text_header}>Alteração da conta</Text>
         </View>
