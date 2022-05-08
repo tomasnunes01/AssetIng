@@ -17,8 +17,8 @@ import { ThemeProvider } from 'styled-components/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import EscritorioService from '../../services/EscritorioService';
 import { theme } from '../../theme';
-import UserService from '../../services/UserService';
 
 const styles = StyleSheet.create({
   container: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class ListUsers extends React.Component {
+export default class ListEscritorio extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -130,7 +130,7 @@ export default class ListUsers extends React.Component {
     });
     this.focusSubscription = navigation.addListener('focus', () => {
       this.setState({ isRendering: true });
-      UserService.listar()
+      EscritorioService.findAll()
         .then((data) => {
           this.setState({
             dataSource: data,
@@ -153,7 +153,7 @@ export default class ListUsers extends React.Component {
     const { navigation } = this.props;
 
     const updateList = () => {
-      return UserService.listar()
+      return EscritorioService.findAll()
         .then((data) => {
           this.setState({
             dataSource: data,
@@ -169,28 +169,25 @@ export default class ListUsers extends React.Component {
     const renderItem = ({ item }) => (
       <TouchableHighlight
         onPress={() => {
-          AsyncStorage.setItem('ID', item.id.toString());
-          navigation.navigate('AccountDetails');
+          AsyncStorage.setItem('ID', item.cod_escritorio.toString());
+          console.log(item.cod_escritorio);
+          // navigation.navigate('EscritorioDetails');
         }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
       >
-        <View key={item.id}>
-          <Text style={styles.listItem}>
-            {item.nome} {item.apelido}
-          </Text>
-          <Text style={styles.sublistItem}>
-            {item.username} - {item.email} - {item.grupo}
-          </Text>
+        <View>
+          <Text style={styles.listItem}>{item.morada}</Text>
+          <Text style={styles.sublistItem}>{item.tipo}</Text>
         </View>
       </TouchableHighlight>
     );
     const renderHiddenItem = ({ item }) => (
-      <View style={styles.rowBack}>
+      <View style={styles.rowBack} key={item.cod_escritorio}>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
-            AsyncStorage.setItem('ID', item.id.toString());
+            AsyncStorage.setItem('ID', item.cod_escritorio.toString());
             navigation.navigate('ChangeUserAccount');
           }}
         >
@@ -201,7 +198,7 @@ export default class ListUsers extends React.Component {
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnRight]}
           onPress={() =>
-            UserService.delete(item.id).then((response) => {
+            EscritorioService.delete(item.cod_escritorio).then((response) => {
               const titulo = response.status ? 'Sucesso' : 'Erro';
               Alert.alert(titulo, response.mensagem);
               if (response.status) {
@@ -225,10 +222,10 @@ export default class ListUsers extends React.Component {
         >
           <StatusBar
             backgroundColor={theme.colors.container.header}
-            barStyle="light-content"
+            barStyle="light"
           />
           <View style={styles.header}>
-            <Text style={styles.text_header}>Contas</Text>
+            <Text style={styles.text_header}>Escritorio</Text>
           </View>
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && (
@@ -244,6 +241,7 @@ export default class ListUsers extends React.Component {
                 renderHiddenItem={renderHiddenItem}
                 leftOpenValue={75}
                 rightOpenValue={-75}
+                keyExtractor={(item, index) => index.toString()}
               />
             )}
             {!isRendering && !isAdmin && (
@@ -252,6 +250,7 @@ export default class ListUsers extends React.Component {
                 renderItem={renderItem}
                 disableLeftSwipe
                 disableRightSwipe
+                keyExtractor={(item, index) => index.toString()}
               />
             )}
           </Animatable.View>
@@ -260,7 +259,7 @@ export default class ListUsers extends React.Component {
     );
   }
 }
-ListUsers.propTypes = {
+ListEscritorio.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   navigation: PropTypes.object.isRequired,
 };

@@ -1802,6 +1802,15 @@
     query-string "^7.0.0"
     react-is "^16.13.0"
 
+"@react-navigation/drawer@^6.4.1":
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-6.4.1.tgz#de488b8fa6f18a75318aa0f0edd9efea8be46285"
+  integrity sha512-CTVkiyhytUr4hUvWH8mEEGZ2BLcbFfWCHhanKisMBdq6qXMOIXoMX7AzOvjP8ojI1pvJZenvs8fopembGwUNUA==
+  dependencies:
+    "@react-navigation/elements" "^1.3.3"
+    color "^3.1.3"
+    warn-once "^0.1.0"
+
 "@react-navigation/elements@^1.3.3":
   version "1.3.3"
   resolved "https://registry.npmjs.org/@react-navigation/elements/-/elements-1.3.3.tgz"
@@ -1817,7 +1826,7 @@
 
 "@react-navigation/native@^6.0.10":
   version "6.0.10"
-  resolved "https://registry.npmjs.org/@react-navigation/native/-/native-6.0.10.tgz"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-6.0.10.tgz#c58aa176eb0e63f3641c83a65c509faf253e4385"
   integrity sha512-H6QhLeiieGxNcAJismIDXIPZgf1myr7Og8v116tezIGmincJTOcWavTd7lPHGnMMXaZg94LlVtbaBRIx9cexqw==
   dependencies:
     "@react-navigation/core" "^6.2.1"
@@ -8223,7 +8232,7 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
 
 mockdate@^3.0.2:
   version "3.0.5"
-  resolved "https://registry.npmjs.org/mockdate/-/mockdate-3.0.5.tgz"
+  resolved "https://registry.yarnpkg.com/mockdate/-/mockdate-3.0.5.tgz#789be686deb3149e7df2b663d2bc4392bc3284fb"
   integrity sha512-iniQP4rj1FhBdBYS/+eQv7j1tadJ9lJtdzgOpvsOHng/GbcDh2Fhdeq+ZRldrPYdXvCyfFUmFeEwEGXZB5I/AQ==
 
 move-concurrently@^1.0.1:
@@ -9870,7 +9879,7 @@ react-error-overlay@^6.0.9:
 
 react-freeze@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-freeze/-/react-freeze-1.0.0.tgz#b21c65fe1783743007c8c9a2952b1c8879a77354"
   integrity sha512-yQaiOqDmoKqks56LN9MTgY06O0qQHgV4FUrikH357DydArSZHQhl0BJFqGKIZoTqi8JizF9Dxhuk1FIZD6qCaw==
 
 react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0:
@@ -9920,7 +9929,7 @@ react-native-elements@^3.4.2:
 
 react-native-gesture-handler@~2.1.0:
   version "2.1.3"
-  resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.1.3.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.1.3.tgz#b96f1e61932d5062cb1023259e1649d65f78338b"
   integrity sha512-y5W2MVB+J6vjIT/mUidDv0BqVRbWXn0cP7R2o6fsSYsHh9M0btT979+bCI7nPuhmRHjkhg5xCm4HNMIH0IQO4w==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
@@ -9952,7 +9961,7 @@ react-native-ratings@8.0.4:
 
 react-native-reanimated@~2.3.1:
   version "2.3.3"
-  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-2.3.3.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.3.3.tgz#73de8ea495e59a091d848741e7037ac55d0235c4"
   integrity sha512-uQofwsWUoKLY4QDgSdNbRxnqQDaQEPLLBNO9SP64JfQ2fDRJD5rjb4d3S29F0z9FqTnsWEwTL2Sl0spdx9xvHA==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.10.4"
@@ -9977,8 +9986,16 @@ react-native-safe-area-view@^1.1.1:
 
 react-native-screens@^3.4.0:
   version "3.13.1"
-  resolved "https://registry.npmjs.org/react-native-screens/-/react-native-screens-3.13.1.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.13.1.tgz#b3b1c5788dca25a71668909f66d87fb35c5c5241"
   integrity sha512-xcrnuUs0qUrGpc2gOTDY4VgHHADQwp80mwR1prU/Q0JqbZN5W3koLhuOsT6FkSRKjR5t40l+4LcjhHdpqRB2HA==
+  dependencies:
+    react-freeze "^1.0.0"
+    warn-once "^0.1.0"
+
+react-native-screens@~3.10.1:
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.10.2.tgz#cbf505d61c09e29ad5b335309951a3bd81f0df19"
+  integrity sha512-bMKSpwMeqAoXBqTJiDEG1ogM1cMk66sEmpp/4dGqdX59v+OwMqPeTuBk37qaSuS7gPOFFKsNW2X3ymGvBT4iEw==
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"

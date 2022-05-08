@@ -26,7 +26,7 @@ import EscritorioService from '../../services/EscritorioService';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#28a745',
+    backgroundColor: theme.colors.container.header,
   },
   header: {
     flex: 1,
@@ -246,7 +246,10 @@ export default function AddUser() {
         behaviour={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <StatusBar backgroundColor="#28a745" barStyle="light-content" />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={theme.colors.container.header}
+        />
         <View style={styles.header}>
           <Text style={styles.text_header}>Adicionar Conta</Text>
         </View>
@@ -259,7 +262,12 @@ export default function AddUser() {
             },
           ]}
         >
-          {isRendering && <ActivityIndicator color="#28a745" size="large" />}
+          {isRendering && (
+            <ActivityIndicator
+              color={theme.colors.button.background}
+              size="large"
+            />
+          )}
           {!isRendering && (
             <>
               <View
@@ -395,7 +403,10 @@ export default function AddUser() {
                 }}
               >
                 {isLoading && (
-                  <ActivityIndicator color="#28a745" size="large" />
+                  <ActivityIndicator
+                    color={theme.colors.button.background}
+                    size="large"
+                  />
                 )}
                 {!isLoading && (
                   <TouchableOpacity

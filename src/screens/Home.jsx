@@ -1,15 +1,24 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from 'expo-status-bar';
 import AddUser from './user/AddUser';
 import ListUsers from './user/ListUsers';
 import { theme } from '../theme';
+import MenuButton from '../components/button.component';
 
 const logo = require('../../assets/logo2.png');
 
@@ -47,20 +56,33 @@ function Home({ navigation }) {
     navigation: PropTypes.object.isRequired,
   };
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Image source={logo} style={{ marginBottom: 20 }} />
+    <View style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <TouchableOpacity
-        onPress={() => changeAccount(navigation)}
-        style={styles.button}
+        style={{
+          marginTop: Platform.OS === 'ios' ? 55 : 40,
+          marginLeft: 15,
+        }}
+        onPress={() => navigation.openDrawer()}
       >
-        <Text style={styles.text}>Minha Conta</Text>
+        <MenuButton />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => logout(navigation)}
-        style={styles.button}
-      >
-        <Text style={styles.text}>Sair</Text>
-      </TouchableOpacity>
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Image source={logo} style={{ marginBottom: 20 }} />
+        <TouchableOpacity
+          onPress={() => changeAccount(navigation)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Minha Conta</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => logout(navigation)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Sair</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -93,7 +115,7 @@ export function HomeScreen() {
     <Tab.Navigator
       initialRouteName="Feed"
       screenOptions={{
-        tabBarActiveTintColor: '#28a745',
+        tabBarActiveTintColor: theme.colors.button.background,
         headerShown: false,
       }}
     >
