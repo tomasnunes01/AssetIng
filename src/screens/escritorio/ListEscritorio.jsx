@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import EscritorioService from '../../services/EscritorioService';
 import { theme } from '../../theme';
+import MenuButton from '../../components/button.component';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,13 +28,14 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    marginTop: -30,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingTop: Platform.OS === 'ios' ? 85 : 60,
+    paddingHorizontal: 15,
     paddingBottom: 30,
   },
   footer: {
-    flex: 4,
+    flex: 20,
     backgroundColor: theme.colors.container.background,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -43,6 +45,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: theme.fontWeights.bold,
     fontSize: theme.fontSizes.title,
+    flex: 6,
+    marginTop: -2,
   },
   list: {
     marginVertical: -50,
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 100,
   },
   backLeftBtn: {
-    backgroundColor: 'orange',
+    backgroundColor: theme.colors.button.yellow,
     left: 0,
     borderTopLeftRadius: 100,
     borderBottomLeftRadius: 100,
@@ -225,7 +229,15 @@ export default class ListEscritorio extends React.Component {
             barStyle="light"
           />
           <View style={styles.header}>
-            <Text style={styles.text_header}>Escritorio</Text>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+              }}
+              onPress={() => navigation.openDrawer()}
+            >
+              <MenuButton />
+            </TouchableOpacity>
+            <Text style={styles.text_header}>Escritórios</Text>
           </View>
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && (

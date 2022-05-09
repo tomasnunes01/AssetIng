@@ -60,15 +60,23 @@ function Home({ navigation }) {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <TouchableOpacity
         style={{
-          marginTop: Platform.OS === 'ios' ? 55 : 40,
+          marginTop: Platform.OS === 'ios' ? 85 : 60,
           marginLeft: 15,
+          flex: 1,
         }}
         onPress={() => navigation.openDrawer()}
       >
         <MenuButton />
       </TouchableOpacity>
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          flex: 5,
+          marginTop: -170,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Image source={logo} style={{ marginBottom: 20 }} />
         <TouchableOpacity
           onPress={() => changeAccount(navigation)}

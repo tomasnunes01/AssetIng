@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 100,
   },
   backLeftBtn: {
-    backgroundColor: 'orange',
+    backgroundColor: theme.colors.button.yellow,
     left: 0,
     borderTopLeftRadius: 100,
     borderBottomLeftRadius: 100,
