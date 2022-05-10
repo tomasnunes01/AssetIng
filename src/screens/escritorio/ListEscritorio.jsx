@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   footer: {
-    flex: 20,
+    flex: 15,
     backgroundColor: theme.colors.container.background,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderBottomWidth: 0.5,
     paddingTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 10,
     paddingHorizontal: 10,
     borderRadius: 100,
   },
@@ -174,8 +174,7 @@ export default class ListEscritorio extends React.Component {
       <TouchableHighlight
         onPress={() => {
           AsyncStorage.setItem('ID', item.cod_escritorio.toString());
-          console.log(item.cod_escritorio);
-          // navigation.navigate('EscritorioDetails');
+          navigation.navigate('EscritorioDetails');
         }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
@@ -192,11 +191,11 @@ export default class ListEscritorio extends React.Component {
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
             AsyncStorage.setItem('ID', item.cod_escritorio.toString());
-            navigation.navigate('ChangeUserAccount');
+            navigation.navigate('ChangeEscritorio');
           }}
         >
           <Text>
-            <MaterialCommunityIcons name="account-edit" size={25} />
+            <MaterialCommunityIcons name="home-edit" size={25} />
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

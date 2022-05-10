@@ -20,5 +20,19 @@ class EscritorioService {
     });
     return data;
   }
+
+  async registar(data) {
+    const req = await this.client.post('escritorio/registar', data);
+    return req;
+  }
+
+  async delete(id) {
+    const response = await this.client.delete('escritorio', {
+      params: {
+        cod_escritorio: id,
+      },
+    });
+    return response.data;
+  }
 }
 export default new EscritorioService(Config);
