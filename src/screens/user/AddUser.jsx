@@ -366,7 +366,9 @@ export default function AddUser() {
                     style={styles.picker}
                     ref={pickerInput}
                   >
-                    {!pickerValueHolder && <Picker.Item label="Selecione" />}
+                    {!pickerValueHolder && (
+                      <Picker.Item label="Escritório ..." />
+                    )}
                     {dataSource.map((item) => (
                       <Picker.Item
                         label={item.morada}

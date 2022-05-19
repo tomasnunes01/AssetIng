@@ -269,6 +269,7 @@ export default function AddEscritorio({ navigation }) {
                     setErrorHelpdesk(null);
                   }}
                   value={helpdesk}
+                  keyboardType="email-address"
                   inputContainerStyle={styles.input}
                   errorMessage={errorHelpdesk}
                   errorStyle={styles.errorStyle}

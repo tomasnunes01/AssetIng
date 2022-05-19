@@ -156,7 +156,9 @@ export default function SignInScreen({ navigation }) {
             />
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('ListPlaces')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AddComputador')}
+          >
             <Text
               style={{ color: theme.colors.button.background, marginTop: 15 }}
             >
