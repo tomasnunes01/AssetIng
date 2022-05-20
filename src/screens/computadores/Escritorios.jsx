@@ -6,19 +6,19 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../../theme';
-import ListEscritorio from './ListEscritorio';
-import AddEscritorio from './AddComputador';
+import AddComputador from './AddComputador';
+import ListComputador from './ListComputador';
 
 const Tab = createBottomTabNavigator();
 
 const tabBarIconAdd = ({ color, size }) => (
-  <MaterialCommunityIcons name="home-plus" color={color} size={size} />
+  <MaterialCommunityIcons name="plus" color={color} size={size} />
 );
 const tabBarIconEdit = ({ color, size }) => (
-  <MaterialCommunityIcons name="home-group" color={color} size={size} />
+  <MaterialCommunityIcons name="laptop" color={color} size={size} />
 );
 
-export function EscritorioScreen() {
+export function ComputadorScreen() {
   const [isAdmin, setAdmin] = useState(null);
   useEffect(() => {
     AsyncStorage.getItem('MYGRUPO').then((grupo) => {
@@ -32,7 +32,7 @@ export function EscritorioScreen() {
 
   return (
     <Tab.Navigator
-      initialRouteName="Escritorios"
+      initialRouteName="Computadores"
       screenOptions={{
         tabBarActiveTintColor: theme.colors.button.background,
         headerShown: false,
@@ -40,19 +40,19 @@ export function EscritorioScreen() {
     >
       {isAdmin && (
         <Tab.Screen
-          name="Adicionar Escritorio"
-          component={AddEscritorio}
+          name="Adicionar Computador"
+          component={AddComputador}
           options={{
-            tabBarLabel: 'Adicionar Escritorio',
+            tabBarLabel: 'Adicionar Computador',
             tabBarIcon: tabBarIconAdd,
           }}
         />
       )}
       <Tab.Screen
-        name="Escritorios"
-        component={ListEscritorio}
+        name="Computadores"
+        component={ListComputador}
         options={{
-          tabBarLabel: 'Escritórios',
+          tabBarLabel: 'Computadores',
           tabBarIcon: tabBarIconEdit,
         }}
       />
@@ -60,10 +60,10 @@ export function EscritorioScreen() {
   );
 }
 
-export default function Escritorio() {
+export default function Computador() {
   return (
     <NavigationContainer>
-      <EscritorioScreen />
+      <ComputadorScreen />
     </NavigationContainer>
   );
 }

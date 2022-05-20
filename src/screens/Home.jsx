@@ -36,6 +36,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: theme.fontWeights.bold,
   },
+  header: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingTop: Platform.OS === 'ios' ? 85 : 60,
+    paddingHorizontal: 15,
+    paddingBottom: 30,
+  },
 });
 
 const logout = async (navigation) => {
@@ -58,16 +66,28 @@ function Home({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           marginTop: Platform.OS === 'ios' ? 85 : 60,
+          borderWidth: 1,
           marginLeft: 15,
           flex: 1,
         }}
         onPress={() => navigation.openDrawer()}
       >
         <MenuButton />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+          }}
+          onPress={() => navigation.openDrawer()}
+        >
+          <MenuButton />
+        </TouchableOpacity>
+      </View>
 
       <View
         style={{

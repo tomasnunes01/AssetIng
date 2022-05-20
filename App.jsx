@@ -17,6 +17,8 @@ import AddEscritorio from './src/screens/escritorio/AddEscritorio';
 import EscritorioDetails from './src/screens/escritorio/EscritorioDetails';
 import ChangeEscritorio from './src/screens/escritorio/ChangeEscritorio';
 import AddComputador from './src/screens/computadores/AddComputador';
+import { ComputadorScreen } from './src/screens/computadores/Escritorios';
+import ListComputador from './src/screens/computadores/ListComputador';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -33,7 +35,7 @@ function MyDrawer() {
       }}
     >
       <Drawer.Screen name="Conta" component={HomeScreen} />
-      <Drawer.Screen name="Computador" component={AddComputador} />
+      <Drawer.Screen name="Computador" component={ComputadorScreen} />
       <Drawer.Screen name="Escritório" component={EscritorioScreen} />
     </Drawer.Navigator>
   );
@@ -60,6 +62,7 @@ function MyStack() {
       <Stack.Screen name="EscritorioDetails" component={EscritorioDetails} />
       <Stack.Screen name="ChangeEscritorio" component={ChangeEscritorio} />
       <Stack.Screen name="AddComputador" component={AddComputador} />
+      <Stack.Screen name="ListComputers" component={ListComputador} />
     </Stack.Navigator>
   );
 }

@@ -28,6 +28,7 @@ import { theme } from '../../theme';
 import EscritorioService from '../../services/EscritorioService';
 import MenuButton from '../../components/button.component';
 import UserService from '../../services/UserService';
+import ComputadorService from '../../services/ComputadorService';
 
 const styles = StyleSheet.create({
   container: {
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
   picker: {
     color: '#000000',
     width: '50%',
-    flex: 3,
+    flex: 2,
   },
   labelPicker: {
     flex: 1,
@@ -120,7 +121,6 @@ export default function AddComputador({ navigation }) {
   const [showDataInstalacao, setShowDataInstalacao] = useState(false);
   const [fimEmprestimo, setFimEmprestimo] = useState(new Date());
   const [showEmprestimo, setShowEmprestimo] = useState(false);
-  const [aviso, setAviso] = useState(null);
   const [errorNrSerie, setErrorNrSerie] = useState(null);
   const [errorUsername, setErrorUsername] = useState(null);
   const [errorCodEscritorio, setErrorCodEscritorio] = useState(null);
@@ -141,6 +141,7 @@ export default function AddComputador({ navigation }) {
   const [isRendering, setRendering] = useState(true);
   const [escritorioList, setEscritorioList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [tipoList, setTipoList] = useState([]);
 
   const scrollViewRef = React.createRef();
   const nrSerieInput = React.createRef();
@@ -159,10 +160,10 @@ export default function AddComputador({ navigation }) {
   const fimEmprestimoInput = React.createRef();
   const avisoInput = React.createRef();
 
-  const reMorada = /.{3,100}/;
-  const reTipo = /.{3,45}/;
-  const reHelpdesk =
-    /^(?=.{3,30}$)(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const reNrSerie = /[a-zA-Z0-9]{1,30}/;
+  const reInt = /[0-9]{1,11}/;
+  const reVarChar20 = /[\w\s]{1,20}/;
+  const reVarChar100 = /[\w\s]{1,100}/;
 
   useEffect(async () => {
     try {
@@ -170,6 +171,8 @@ export default function AddComputador({ navigation }) {
       setEscritorioList(escritorios);
       const users = await UserService.listar();
       setUserList(users);
+      const tipoComputador = await ComputadorService.listarTipos();
+      setTipoList(tipoComputador);
       setRendering(false);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -242,7 +245,7 @@ export default function AddComputador({ navigation }) {
     setErrorSistemaOperativo(null);
     setErrorUsername(null);
 
-    if (!reMorada.test(String(morada))) {
+    /* if (!reMorada.test(String(morada))) {
       setErrorMorada('Preencha o campo morada corretamente');
       erro = true;
       moradaInput.current.shake();
@@ -259,7 +262,7 @@ export default function AddComputador({ navigation }) {
       erro = true;
       helpdeskInput.current.shake();
       helpdeskInput.current.focus();
-    }
+    } */
     return !erro;
   };
 
@@ -268,31 +271,43 @@ export default function AddComputador({ navigation }) {
       setLoading(true);
 
       const data = {
-        tipo,
-        morada,
-        helpdesk,
+        nr_serie: nrSerie,
+        cod_utilizador: username,
+        cod_escritorio: codEscritorio,
+        cod_tipo: codTipo,
+        marca,
+        modelo,
+        descricao,
+        so: sistemaOperativo,
+        cpu,
+        ram,
+        hdd,
+        garantia,
+        data_instalacao: dataInstalacao,
+        fim_emprestimo: fimEmprestimo,
       };
 
-      EscritorioService.registar(data)
+      ComputadorService.registar(data)
         .then((response) => {
           setLoading(false);
           const titulo = response.data.status ? 'Sucesso' : 'Erro';
           Alert.alert(titulo, response.data.mensagem);
-          setAviso(null);
-          setCodEscritorio(null);
-          setCodTipo(null);
-          setCpu(null);
-          setDataInstalacao(null);
-          setDescricao(null);
-          setFimEmprestimo(null);
-          setGarantia(null);
-          setHdd(null);
-          setMarca(null);
-          setModelo(null);
-          setNrSerie(null);
-          setRam(null);
-          setSistemaOperativo(null);
-          setUsername(null);
+          if (response.data.status) {
+            setCodEscritorio(null);
+            setCodTipo(null);
+            setCpu(null);
+            setDataInstalacao(new Date());
+            setDescricao(null);
+            setFimEmprestimo(new Date());
+            setGarantia(new Date());
+            setHdd(null);
+            setMarca(null);
+            setModelo(null);
+            setNrSerie(null);
+            setRam(null);
+            setSistemaOperativo(null);
+            setUsername(null);
+          }
         })
         .catch((error) => {
           setLoading(false);
@@ -495,6 +510,25 @@ export default function AddComputador({ navigation }) {
                         label={item.username}
                         value={item.id}
                         key={item.id}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+                <View style={styles.pickerView}>
+                  <Text style={styles.labelPicker}>Tipo de Computador:</Text>
+                  <Picker
+                    selectedValue={codTipo}
+                    onValueChange={(itemValue) => setCodTipo(itemValue)}
+                    mode="dropdown"
+                    style={styles.picker}
+                    ref={codTipoInput}
+                  >
+                    {!codTipo && <Picker.Item label="Selecione ..." />}
+                    {tipoList.map((item) => (
+                      <Picker.Item
+                        label={item.tipo}
+                        value={item.cod_tipo}
+                        key={item.cod_tipo}
                       />
                     ))}
                   </Picker>

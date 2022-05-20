@@ -20,6 +20,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import EscritorioService from '../../services/EscritorioService';
 import { theme } from '../../theme';
 import MenuButton from '../../components/button.component';
+import ComputadorService from '../../services/ComputadorService';
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class ListEscritorio extends React.Component {
+export default class ListComputador extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -134,7 +135,7 @@ export default class ListEscritorio extends React.Component {
     });
     this.focusSubscription = navigation.addListener('focus', () => {
       this.setState({ isRendering: true });
-      EscritorioService.findAll()
+      ComputadorService.findAll()
         .then((data) => {
           this.setState({
             dataSource: data,
@@ -157,7 +158,7 @@ export default class ListEscritorio extends React.Component {
     const { navigation } = this.props;
 
     const updateList = () => {
-      return EscritorioService.findAll()
+      return ComputadorService.findAll()
         .then((data) => {
           this.setState({
             dataSource: data,
@@ -173,15 +174,17 @@ export default class ListEscritorio extends React.Component {
     const renderItem = ({ item }) => (
       <TouchableHighlight
         onPress={() => {
-          AsyncStorage.setItem('ID', item.cod_escritorio.toString());
+          AsyncStorage.setItem('ID', item.nr_serie);
           navigation.navigate('EscritorioDetails');
         }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
       >
         <View>
-          <Text style={styles.listItem}>{item.morada}</Text>
-          <Text style={styles.sublistItem}>{item.tipo}</Text>
+          <Text style={styles.listItem}>
+            {item.marca} {item.modelo}
+          </Text>
+          <Text style={styles.sublistItem}>S/N: {item.nr_serie}</Text>
         </View>
       </TouchableHighlight>
     );
@@ -190,7 +193,7 @@ export default class ListEscritorio extends React.Component {
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
-            AsyncStorage.setItem('ID', item.cod_escritorio.toString());
+            AsyncStorage.setItem('ID', item.nr_serie);
             navigation.navigate('ChangeEscritorio');
           }}
         >
@@ -236,7 +239,7 @@ export default class ListEscritorio extends React.Component {
             >
               <MenuButton />
             </TouchableOpacity>
-            <Text style={styles.text_header}>Escritórios</Text>
+            <Text style={styles.text_header}>Computadores</Text>
           </View>
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && (
@@ -270,7 +273,7 @@ export default class ListEscritorio extends React.Component {
     );
   }
 }
-ListEscritorio.propTypes = {
+ListComputador.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   navigation: PropTypes.object.isRequired,
 };
