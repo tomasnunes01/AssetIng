@@ -17,7 +17,6 @@ import { ThemeProvider } from 'styled-components/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import EscritorioService from '../../services/EscritorioService';
 import { theme } from '../../theme';
 import MenuButton from '../../components/button.component';
 import ComputadorService from '../../services/ComputadorService';
@@ -194,17 +193,17 @@ export default class ListComputador extends React.Component {
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
             AsyncStorage.setItem('ID', item.nr_serie);
-            navigation.navigate('ChangeEscritorio');
+            navigation.navigate('ChangeComputador');
           }}
         >
           <Text>
-            <MaterialCommunityIcons name="home-edit" size={25} />
+            <MaterialCommunityIcons name="pencil" size={25} />
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnRight]}
           onPress={() =>
-            EscritorioService.delete(item.cod_escritorio).then((response) => {
+            ComputadorService.delete(item.nr_serie).then((response) => {
               const titulo = response.status ? 'Sucesso' : 'Erro';
               Alert.alert(titulo, response.mensagem);
               if (response.status) {

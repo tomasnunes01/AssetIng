@@ -17,8 +17,9 @@ import AddEscritorio from './src/screens/escritorio/AddEscritorio';
 import EscritorioDetails from './src/screens/escritorio/EscritorioDetails';
 import ChangeEscritorio from './src/screens/escritorio/ChangeEscritorio';
 import AddComputador from './src/screens/computadores/AddComputador';
-import { ComputadorScreen } from './src/screens/computadores/Escritorios';
+import { ComputadorScreen } from './src/screens/computadores/Computadores';
 import ListComputador from './src/screens/computadores/ListComputador';
+import ChangeComputador from './src/screens/computadores/ChangeComputador';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,6 +64,7 @@ function MyStack() {
       <Stack.Screen name="ChangeEscritorio" component={ChangeEscritorio} />
       <Stack.Screen name="AddComputador" component={AddComputador} />
       <Stack.Screen name="ListComputers" component={ListComputador} />
+      <Stack.Screen name="ChangeComputador" component={ChangeComputador} />
     </Stack.Navigator>
   );
 }

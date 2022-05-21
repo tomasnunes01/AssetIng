@@ -26,6 +26,10 @@ class EscritorioService {
     return req;
   }
 
+  async atualizar(data) {
+    return this.client.patch('escritorio/atualizar', data);
+  }
+
   async delete(id) {
     const response = await this.client.delete('escritorio', {
       params: {

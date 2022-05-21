@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Dimensions,
   View,
   TouchableOpacity,
   Platform,
@@ -122,9 +121,6 @@ export default function AddComputador({ navigation }) {
   const [fimEmprestimo, setFimEmprestimo] = useState(new Date());
   const [showEmprestimo, setShowEmprestimo] = useState(false);
   const [errorNrSerie, setErrorNrSerie] = useState(null);
-  const [errorUsername, setErrorUsername] = useState(null);
-  const [errorCodEscritorio, setErrorCodEscritorio] = useState(null);
-  const [errorCodTipo, setErrorCodTipo] = useState(null);
   const [errorMarca, setErrorMarca] = useState(null);
   const [errorModelo, setErrorModelo] = useState(null);
   const [errorDescricao, setErrorDescricao] = useState(null);
@@ -135,7 +131,6 @@ export default function AddComputador({ navigation }) {
   const [errorGarantia, setErrorGarantia] = useState(null);
   const [errorDataInstalacao, setErrorDataInstalacao] = useState(null);
   const [errorFimEmprestimo, setErrorFimEmprestimo] = useState(null);
-  const [errorAviso, setErrorAviso] = useState(null);
   const [displaymode, setMode] = useState('date');
   const [isLoading, setLoading] = useState(false);
   const [isRendering, setRendering] = useState(true);
@@ -155,15 +150,11 @@ export default function AddComputador({ navigation }) {
   const cpuInput = React.createRef();
   const ramInput = React.createRef();
   const hddInput = React.createRef();
-  const garantiaInput = React.createRef();
-  const dataInstalacaoInput = React.createRef();
-  const fimEmprestimoInput = React.createRef();
-  const avisoInput = React.createRef();
 
   const reNrSerie = /[a-zA-Z0-9]{1,30}/;
   const reInt = /[0-9]{1,11}/;
   const reVarChar20 = /[\w\s]{1,20}/;
-  const reVarChar100 = /[\w\s]{1,100}/;
+  const reVarChar100 = /[\w\s]{0,100}/;
 
   useEffect(async () => {
     try {
@@ -229,9 +220,6 @@ export default function AddComputador({ navigation }) {
 
   const validar = () => {
     let erro = false;
-    setErrorAviso(null);
-    setErrorCodEscritorio(null);
-    setErrorCodTipo(null);
     setErrorCpu(null);
     setErrorDataInstalacao(null);
     setErrorDescricao(null);
@@ -243,26 +231,59 @@ export default function AddComputador({ navigation }) {
     setErrorNrSerie(null);
     setErrorRam(null);
     setErrorSistemaOperativo(null);
-    setErrorUsername(null);
 
-    /* if (!reMorada.test(String(morada))) {
-      setErrorMorada('Preencha o campo morada corretamente');
+    if (!reNrSerie.test(String(nrSerie)) || nrSerie == null) {
+      setErrorNrSerie('O número de série é obrigatório');
       erro = true;
-      moradaInput.current.shake();
-      moradaInput.current.focus();
+      nrSerieInput.current.shake();
+      nrSerieInput.current.focus();
     }
-    if (!reTipo.test(String(tipo))) {
-      setErrorTipo('Preencha o campo tipo corretamente');
+    if (!reVarChar20.test(String(cpu)) && cpu !== null) {
+      setErrorCpu('Caracteres especiais não são aceites');
       erro = true;
-      tipoInput.current.shake();
-      tipoInput.current.focus();
+      cpuInput.current.shake();
+      cpuInput.current.focus();
     }
-    if (!reHelpdesk.test(String(helpdesk))) {
-      setErrorHelpdesk('Introduza um email de contacto');
+    if (!reVarChar100.test(String(descricao)) && descricao !== null) {
+      setErrorDescricao('Caracteres especiais não são aceites');
       erro = true;
-      helpdeskInput.current.shake();
-      helpdeskInput.current.focus();
-    } */
+      descricaoInput.current.shake();
+      descricaoInput.current.focus();
+    }
+    if (!reInt.test(String(hdd)) && hdd !== null) {
+      setErrorHdd('Caracteres especiais não são aceites');
+      erro = true;
+      hddInput.current.shake();
+      hddInput.current.focus();
+    }
+    if (!reVarChar20.test(String(marca)) || marca == null) {
+      setErrorMarca('O campo marca é obrigatório');
+      erro = true;
+      marcaInput.current.shake();
+      marcaInput.current.focus();
+    }
+    if (!reVarChar20.test(String(modelo)) || modelo == null) {
+      setErrorModelo('O campo modelo é obrigatório');
+      erro = true;
+      modeloInput.current.shake();
+      modeloInput.current.focus();
+    }
+    if (!reInt.test(String(ram)) && ram !== null) {
+      setErrorMarca('Introduza um número inteiro, em GB');
+      erro = true;
+      ramInput.current.shake();
+      ramInput.current.focus();
+    }
+    if (!reVarChar20.test(String(sistemaOperativo))) {
+      setErrorSistemaOperativo('Caracteres especiais não são aceites');
+      erro = true;
+      sistemaOperativoInput.current.shake();
+      sistemaOperativoInput.current.focus();
+    }
+    if (!codTipo && !erro) {
+      erro = true;
+      codTipoInput.current.focus();
+    }
     return !erro;
   };
 
@@ -459,7 +480,7 @@ export default function AddComputador({ navigation }) {
                   errorMessage={errorRam}
                   errorStyle={styles.errorStyle}
                   ref={ramInput}
-                  maxLength={5}
+                  maxLength={11}
                 />
                 <Input
                   placeholder="Capacidade de disco (GB)"
@@ -474,7 +495,7 @@ export default function AddComputador({ navigation }) {
                   errorMessage={errorHdd}
                   errorStyle={styles.errorStyle}
                   ref={hddInput}
-                  maxLength={5}
+                  maxLength={11}
                 />
                 <View style={styles.pickerView}>
                   <Text style={styles.labelPicker}>Escritório:</Text>
@@ -554,7 +575,6 @@ export default function AddComputador({ navigation }) {
                     inputContainerStyle={styles.inputMedio}
                     errorMessage={errorGarantia}
                     errorStyle={styles.errorStyle}
-                    ref={garantiaInput}
                     disabled
                   />
                   <MaterialCommunityIcons
