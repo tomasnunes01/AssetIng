@@ -12,12 +12,9 @@ import { Input, Text } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { Picker } from '@react-native-picker/picker';
 import { ThemeProvider } from 'styled-components/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../../theme';
-import userService from '../../services/UserService';
 import EscritorioService from '../../services/EscritorioService';
 import {
   FormButton,

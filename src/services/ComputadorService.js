@@ -12,6 +12,15 @@ class ComputadorService {
     return data;
   }
 
+  async findTypeByID(id) {
+    const { data } = await this.client.get('computador/findTypeByID', {
+      params: {
+        id,
+      },
+    });
+    return data;
+  }
+
   async registar(data) {
     const req = await this.client.post('computador/registar', data);
     return req;

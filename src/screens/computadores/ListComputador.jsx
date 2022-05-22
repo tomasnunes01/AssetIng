@@ -174,7 +174,7 @@ export default class ListComputador extends React.Component {
       <TouchableHighlight
         onPress={() => {
           AsyncStorage.setItem('ID', item.nr_serie);
-          navigation.navigate('EscritorioDetails');
+          navigation.navigate('ComputadorDetails');
         }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
