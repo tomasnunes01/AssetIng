@@ -157,7 +157,7 @@ export default function SignInScreen({ navigation }) {
           </View>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('AddComputador')}
+            onPress={() => navigation.navigate('RelatorioScreen')}
           >
             <Text
               style={{ color: theme.colors.button.background, marginTop: 15 }}
