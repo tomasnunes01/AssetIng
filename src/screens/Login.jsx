@@ -10,11 +10,10 @@ import {
   Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
-import Feather from 'react-native-vector-icons/Feather';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 import { ThemeProvider } from 'styled-components/native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
@@ -71,6 +70,10 @@ const styles = StyleSheet.create({
     color: '#FF0000',
     fontSize: 14,
   },
+  cpyrgtview: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
 });
 
 export default function SignInScreen({ navigation }) {
@@ -123,7 +126,12 @@ export default function SignInScreen({ navigation }) {
         <Animatable.View animation="fadeInUpBig" style={styles.footer}>
           <Text style={[styles.text_footer]}>Username</Text>
           <View style={styles.action}>
-            <FontAwesome name="user-o" color={colors.text} size={20} />
+            <MaterialCommunityIcons
+              name="account-outline"
+              color={colors.text}
+              size={20}
+              style={{ paddingBottom: 5 }}
+            />
             <TextInput
               placeholder="Introduza o username"
               placeholderTextColor="#686868"
@@ -145,7 +153,12 @@ export default function SignInScreen({ navigation }) {
             Palavra-Passe
           </Text>
           <View style={styles.action}>
-            <Feather name="lock" color={colors.text} size={20} />
+            <MaterialCommunityIcons
+              name="lock-outline"
+              color={colors.text}
+              size={20}
+              style={{ paddingBottom: 10 }}
+            />
             <TextInput
               placeholder="Introduza a palavra-passe"
               placeholderTextColor="#686868"
@@ -157,7 +170,12 @@ export default function SignInScreen({ navigation }) {
           </View>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('RelatorioScreen')}
+            onPress={() =>
+              Alert.alert(
+                'Por favor contacte um Administrador',
+                'Por questões de segurança, deve pedir a um Administrador para efetuar a operação',
+              )
+            }
           >
             <Text
               style={{ color: theme.colors.button.background, marginTop: 15 }}
@@ -189,6 +207,14 @@ export default function SignInScreen({ navigation }) {
                 </FormButtonView>
               </TouchableOpacity>
             )}
+          </View>
+          <View style={styles.cpyrgtview}>
+            <MaterialCommunityIcons
+              name="copyright"
+              size={15}
+              style={{ marginHorizontal: 5, paddingTop: 1.5 }}
+            />
+            <Text>2022 Tomás Nunes</Text>
           </View>
         </Animatable.View>
       </View>

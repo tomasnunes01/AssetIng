@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.button.background,
     padding: '1.5%',
     borderRadius: 100,
-    marginBottom: 7,
-    width: '30%',
+    marginBottom: 15,
+    width: '40%',
   },
   text: {
     color: 'ivory',
