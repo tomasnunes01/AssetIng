@@ -5238,7 +5238,7 @@ expo-error-recovery@~3.0.5:
   resolved "https://registry.npmjs.org/expo-error-recovery/-/expo-error-recovery-3.0.5.tgz"
   integrity sha512-VM6OOecjt0aPu5/eCdGGJfNjvAZIemaQym0JF/+SA5IlLiPpEfbVCDTO/5yiS8Zb5fKpeABx+GCRmtfnFqvRRw==
 
-expo-file-system@~13.1.3:
+expo-file-system@~13.1.3, expo-file-system@~13.1.4:
   version "13.1.4"
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-13.1.4.tgz"
   integrity sha512-/C2FKCzrdWuEt4m8Pzl9J4MhKgfU0denVLbqoKjidv8DnsLQrscFNlLhXuiooqWwsxB2OWAtGEVnPGJBWVuNEQ==
@@ -5257,6 +5257,13 @@ expo-keep-awake@~10.0.2:
   version "10.0.2"
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-10.0.2.tgz"
   integrity sha512-Ro1lgyKldbFs4mxhWM+goX9sg0S2SRR8FiJJeOvaRzf8xNhrZfWA00Zpr+/3ocCoWQ3eEL+X9UF4PXXHf0KoOg==
+
+expo-media-library@~14.0.0:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-14.0.1.tgz#b1a2ce3699edf6b5f561d32812e608ba064ba43f"
+  integrity sha512-a7NGFxZvns81y0fRZJsBROXFWKtyEMaodw+x32IPNhKLUAn+X1ggfBS8FbNpUs3bA4ZvhjFQBn59dxPfcHHxEg==
+  dependencies:
+    "@expo/config-plugins" "^4.0.2"
 
 expo-modules-autolinking@0.5.5, expo-modules-autolinking@~0.5.1:
   version "0.5.5"
@@ -5277,6 +5284,11 @@ expo-modules-core@0.6.5:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
+expo-print@~11.1.0:
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/expo-print/-/expo-print-11.1.1.tgz#04e98fcf51d14281b1781187b1eca8a567be1534"
+  integrity sha512-JRJNzk67nCqAgRBauikLQ7rPz/M+4m0XYkxPDQF2PkrqAyhBbDPcAmySYJKczpD++XBwPkQkbmBHShefFsNcOQ==
+
 expo-pwa@0.0.116:
   version "0.0.116"
   resolved "https://registry.npmjs.org/expo-pwa/-/expo-pwa-0.0.116.tgz"
@@ -5287,6 +5299,11 @@ expo-pwa@0.0.116:
     chalk "^4.0.0"
     commander "2.20.0"
     update-check "1.5.3"
+
+expo-sharing@~10.1.0:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-10.1.1.tgz#80348768a2b0ab23860604c8902696d0c39ffea4"
+  integrity sha512-Wyre/y6Ce+S7PYwu1QGH2QNtO8ftHViiivSGAIif4shCO64QbO2JHYvgBzeMvAGfvUXzbJ04I+oCZKypA59tnA==
 
 expo-status-bar@~1.2.0:
   version "1.2.0"
@@ -9954,11 +9971,6 @@ react-native-gesture-handler@~2.1.0:
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
-
-react-native-html-to-pdf@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/react-native-html-to-pdf/-/react-native-html-to-pdf-0.12.0.tgz#2b467296f85c9c9783a7288b19722a7028dcbcb8"
-  integrity sha512-Yb5WO9SfF86s5Yv9PqXQ7fZDr9zZOJ+6jtweT9zFLraPNHWX7pSxe2dSkeg3cGiNrib65ZXGN6ksHymfYLFSSg==
 
 react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"
