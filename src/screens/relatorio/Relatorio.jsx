@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import PropTypes from 'prop-types';
 import { StatusBar } from 'expo-status-bar';
+import { printToFileAsync } from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 import { theme } from '../../theme';
 import MenuButton from '../../components/button.component';
 
@@ -86,20 +87,12 @@ export default function RelatorioScreen({ navigation }) {
       </html>
     `;
   const createPDF = async () => {
-    const options = {
+    const file = await printToFileAsync({
       html: HTMLfimDeEmprestimo,
-      fileName: 'Asseting - Relatório',
-      directory: 'Download',
-      base64: true,
-    };
+      base64: false,
+    });
 
-    const file = await RNHTMLtoPDF.convert(options);
-    Alert.alert(
-      'Successfully Exported',
-      `Path:${file.filePath}`,
-      [{ text: 'Cancel', style: 'cancel' }, { text: 'Open' }],
-      { cancelable: true },
-    );
+    await shareAsync(file.uri);
   };
 
   return (
