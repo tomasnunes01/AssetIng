@@ -121,7 +121,7 @@ export default function SignInScreen({ navigation }) {
           barStyle="light-content"
         />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Bem vindo!</Text>
+          <Text style={styles.text_header}>Bem-vindo!</Text>
         </View>
         <Animatable.View animation="fadeInUpBig" style={styles.footer}>
           <Text style={[styles.text_footer]}>Username</Text>
