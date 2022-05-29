@@ -6,7 +6,6 @@ export const colors = {
   },
   container: {
     background: '#f6f6f6',
-    // header: '#3c3c3a',
     header: '#fca2ae',
   },
 };
