@@ -13,7 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import { theme } from '../../theme';
 import MenuButton from '../../components/button.component';
 
-const logo = require('../../../assets/logo2.png');
+const logo = require('../../../assets/logo.png');
 
 const styles = StyleSheet.create({
   button: {
