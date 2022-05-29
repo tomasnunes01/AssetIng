@@ -22,8 +22,6 @@ import {
   FormButtonView,
 } from '../../components/login-form.component';
 import ComputadorService from '../../services/ComputadorService';
-import MenuButton from '../../components/button.component';
-import EscritorioService from '../../services/EscritorioService';
 import UserService from '../../services/UserService';
 
 const styles = StyleSheet.create({
@@ -125,9 +123,7 @@ export default function ComputadorDetails({ navigation }) {
     AsyncStorage.getItem('ID').then((fromAsyncId) => {
       ComputadorService.findByID(fromAsyncId).then((response) => {
         setNrSerie(response.nr_serie);
-        EscritorioService.findByID(response.cod_escritorio).then((data) => {
-          setCodEscritorio(data.morada);
-        });
+        setCodEscritorio(response.cod_escritorio.morada);
         ComputadorService.findTypeByID(response.cod_tipo).then((data) => {
           setCodTipo(data.tipo);
         });
@@ -160,14 +156,6 @@ export default function ComputadorDetails({ navigation }) {
           backgroundColor={theme.colors.container.header}
         />
         <View style={styles.header}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-            }}
-            onPress={() => navigation.openDrawer()}
-          >
-            <MenuButton />
-          </TouchableOpacity>
           <Text style={styles.text_header}>Dados do Computador</Text>
         </View>
         <Animatable.View

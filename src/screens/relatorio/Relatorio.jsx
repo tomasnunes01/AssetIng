@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import {
-  Alert,
   Image,
   Platform,
   StyleSheet,
@@ -46,61 +45,6 @@ export default function RelatorioScreen({ navigation }) {
     navigation: PropTypes.object.isRequired,
   };
 
-  const HTMLfimDeEmprestimo = `
-      <html lang="pt-pt">
-          <head>
-              <meta charset="utf-8">
-              <title>Relatório</title>
-          </head>
-          <body>
-              <table border="1" cellpadding="10" cellspacing="0" align="center">
-                  <thead>
-                      <tr>
-                          <th>Número de Série</th>
-                          <th>Marca</th>
-                          <th>Modelo</th>
-                          <th>CPU</th>
-                          <th>RAM</th>
-                          <th>Disco</th>
-                          <th>Local</th>
-                          <th>Utilizador</th>
-                          <th>Fim de empréstimo</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>'.$nr_serie.'</td>
-                          <td>'.$marca.'</td>
-                          <td>'.$modelo.'</td>
-                          <td>'.$cpu.'</td>
-                          <td>'.$ram.'</td>
-                          <td>'.$hdd.'</td>
-                          <td>'.$morada.'</td>
-                          <td>'.$nome.'</td>
-                          <td>'.$emprestimo.'<br></td>
-                      </tr>
-                  </tbody>
-              </table>
-          </body>
-      </html>
-    `;
-  const createPDF = async () => {
-    const options = {
-      html: HTMLfimDeEmprestimo,
-      fileName: 'Asseting - Relatório',
-      directory: 'Download',
-      base64: true,
-    };
-
-    const file = await RNHTMLtoPDF.convert(options);
-    Alert.alert(
-      'Successfully Exported',
-      `Path:${file.filePath}`,
-      [{ text: 'Cancel', style: 'cancel' }, { text: 'Open' }],
-      { cancelable: true },
-    );
-  };
-
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
@@ -124,7 +68,7 @@ export default function RelatorioScreen({ navigation }) {
         }}
       >
         <Image source={logo} style={{ marginBottom: 20 }} />
-        <TouchableOpacity style={styles.button} onPress={createPDF}>
+        <TouchableOpacity style={styles.button}>
           <Text style={styles.text}>Gerar Relatório</Text>
         </TouchableOpacity>
       </View>
