@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import PropTypes from 'prop-types';
 import { StatusBar } from 'expo-status-bar';
 import { theme } from '../../theme';
