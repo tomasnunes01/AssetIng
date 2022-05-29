@@ -117,7 +117,11 @@ export default function RelatorioScreen({ navigation }) {
           alignItems: 'center',
         }}
       >
-        <Image source={logo} style={{ marginBottom: 20 }} />
+        <Image
+          source={logo}
+          resizeMode="contain"
+          style={{ marginBottom: 50, height: 110 }}
+        />
         <TouchableOpacity style={styles.button} onPress={createPDF}>
           <Text style={styles.text}>Gerar Relatório</Text>
         </TouchableOpacity>
