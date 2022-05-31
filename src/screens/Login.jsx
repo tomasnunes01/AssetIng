@@ -8,6 +8,7 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
+  Image,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import PropTypes from 'prop-types';
@@ -17,6 +18,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FormButton, FormButtonView } from '../components/login-form.component';
 import { theme } from '../theme';
 import userService from '../services/UserService';
+
+const logo = require('../../assets/logo.png');
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingBottom: 50,
+    alignSelf: 'center',
   },
   footer: {
     flex: 4,
@@ -121,7 +125,11 @@ export default function SignInScreen({ navigation }) {
           barStyle="light-content"
         />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Bem-vindo!</Text>
+          <Image
+            source={logo}
+            resizeMode="cover"
+            style={{ height: 90, width: 260 }}
+          />
         </View>
         <Animatable.View animation="fadeInUpBig" style={styles.footer}>
           <Text style={[styles.text_footer]}>Username</Text>

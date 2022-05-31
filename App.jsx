@@ -40,7 +40,6 @@ function MyDrawer() {
       <Drawer.Screen name="Conta" component={HomeScreen} />
       <Drawer.Screen name="Computador" component={ComputadorScreen} />
       <Drawer.Screen name="Escritório" component={EscritorioScreen} />
-      <Drawer.Screen name="Relatório" component={RelatorioScreen} />
     </Drawer.Navigator>
   );
 }
