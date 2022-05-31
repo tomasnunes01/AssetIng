@@ -22,6 +22,7 @@ import ListComputador from './src/screens/computador/ListComputador';
 import ChangeComputador from './src/screens/computador/ChangeComputador';
 import ComputadorDetails from './src/screens/computador/ComputadorDetails';
 import RelatorioScreen from './src/screens/relatorio/Relatorio';
+import { SoftwareScreen } from './src/screens/software/Softwares';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -41,6 +42,7 @@ function MyDrawer() {
       <Drawer.Screen name="Computador" component={ComputadorScreen} />
       <Drawer.Screen name="Escritório" component={EscritorioScreen} />
       <Drawer.Screen name="Relatório" component={RelatorioScreen} />
+      <Drawer.Screen name="Software" component={SoftwareScreen} />
     </Drawer.Navigator>
   );
 }
