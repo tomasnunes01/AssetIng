@@ -96,29 +96,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function AddComputador({ navigation }) {
-  AddComputador.propTypes = {
+export default function AddSoftware({ navigation }) {
+  AddSoftware.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     navigation: PropTypes.object.isRequired,
   };
   const { colors } = useTheme();
 
+  const [id, setId] = useState(null);
   const [nrSerie, setNrSerie] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [codEscritorio, setCodEscritorio] = useState(null);
-  const [codTipo, setCodTipo] = useState(null);
-  const [marca, setMarca] = useState(null);
-  const [modelo, setModelo] = useState(null);
+  const [fabricante, setFabricante] = useState(null);
+  const [versao, setVersao] = useState(null);
   const [descricao, setDescricao] = useState(null);
-  const [sistemaOperativo, setSistemaOperativo] = useState(null);
-  const [cpu, setCpu] = useState(null);
-  const [ram, setRam] = useState(null);
-  const [hdd, setHdd] = useState(null);
-  const [garantia, setGarantia] = useState(new Date());
-  const [showGarantia, setShowGarantia] = useState(false);
-  const [dataInstalacao, setDataInstalacao] = useState(new Date());
-  const [showDataInstalacao, setShowDataInstalacao] = useState(false);
-  const [fimEmprestimo, setFimEmprestimo] = useState(new Date());
+  const [chave, setChave] = useState(null);
+  const [codTipoSoftware, setCodTipoSoftware] = useState(null);
+  const [codLicenca, setCodLicenca] = useState(null);
+  const [computador, setComputador] = useState(null);
+  const [fimEmprestimo, setValidade] = useState(new Date());
   const [showEmprestimo, setShowEmprestimo] = useState(false);
   const [errorNrSerie, setErrorNrSerie] = useState(null);
   const [errorMarca, setErrorMarca] = useState(null);
@@ -212,7 +206,7 @@ export default function AddComputador({ navigation }) {
   };
   const changeEmprestimoDate = (event, selectedDate) => {
     const currentDate = selectedDate || fimEmprestimo;
-    setFimEmprestimo(currentDate);
+    setValidade(currentDate);
     if (Platform.OS === 'android') {
       setShowEmprestimo(false);
     }
@@ -280,7 +274,7 @@ export default function AddComputador({ navigation }) {
       sistemaOperativoInput.current.shake();
       sistemaOperativoInput.current.focus();
     }
-    if (!codTipo && !erro) {
+    if (!codTipoSoftware && !erro) {
       erro = true;
       codTipoInput.current.focus();
     }
@@ -294,8 +288,8 @@ export default function AddComputador({ navigation }) {
       const data = {
         nr_serie: nrSerie,
         cod_utilizador: username,
-        cod_escritorio: codEscritorio,
-        cod_tipo: codTipo,
+        cod_escritorio: codLicenca,
+        cod_tipo: codTipoSoftware,
         marca,
         modelo,
         descricao,
@@ -314,12 +308,12 @@ export default function AddComputador({ navigation }) {
           const titulo = response.data.status ? 'Sucesso' : 'Erro';
           Alert.alert(titulo, response.data.mensagem);
           if (response.data.status) {
-            setCodEscritorio(null);
-            setCodTipo(null);
+            setCodLicenca(null);
+            setCodTipoSoftware(null);
             setCpu(null);
             setDataInstalacao(new Date());
             setDescricao(null);
-            setFimEmprestimo(new Date());
+            setValidade(new Date());
             setGarantia(new Date());
             setHdd(null);
             setMarca(null);
@@ -500,13 +494,13 @@ export default function AddComputador({ navigation }) {
                 <View style={styles.pickerView}>
                   <Text style={styles.labelPicker}>Escritório:</Text>
                   <Picker
-                    selectedValue={codEscritorio}
-                    onValueChange={(itemValue) => setCodEscritorio(itemValue)}
+                    selectedValue={codLicenca}
+                    onValueChange={(itemValue) => setCodLicenca(itemValue)}
                     mode="dropdown"
                     style={styles.picker}
                     ref={codEscritorioInput}
                   >
-                    {!codEscritorio && <Picker.Item label="Selecione ..." />}
+                    {!codLicenca && <Picker.Item label="Selecione ..." />}
                     {escritorioList.map((item) => (
                       <Picker.Item
                         label={item.morada}
@@ -538,13 +532,13 @@ export default function AddComputador({ navigation }) {
                 <View style={styles.pickerView}>
                   <Text style={styles.labelPicker}>Tipo de Computador:</Text>
                   <Picker
-                    selectedValue={codTipo}
-                    onValueChange={(itemValue) => setCodTipo(itemValue)}
+                    selectedValue={codTipoSoftware}
+                    onValueChange={(itemValue) => setCodTipoSoftware(itemValue)}
                     mode="dropdown"
                     style={styles.picker}
                     ref={codTipoInput}
                   >
-                    {!codTipo && <Picker.Item label="Selecione ..." />}
+                    {!codTipoSoftware && <Picker.Item label="Selecione ..." />}
                     {tipoList.map((item) => (
                       <Picker.Item
                         label={item.tipo}

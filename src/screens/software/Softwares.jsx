@@ -6,8 +6,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../../theme';
-import AddComputador from './AddComputador';
-import ListComputador from './ListComputador';
+import AddSoftware from './AddSoftware';
+import ListSoftware from './ListSoftware';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +41,7 @@ export function SoftwareScreen() {
       {isAdmin && (
         <Tab.Screen
           name="Adicionar Software"
-          component={AddComputador}
+          component={AddSoftware}
           options={{
             tabBarLabel: 'Adicionar Software',
             tabBarIcon: tabBarIconAdd,
@@ -50,7 +50,7 @@ export function SoftwareScreen() {
       )}
       <Tab.Screen
         name="Software"
-        component={ListComputador}
+        component={ListSoftware}
         options={{
           tabBarLabel: 'Software',
           tabBarIcon: tabBarIconEdit,

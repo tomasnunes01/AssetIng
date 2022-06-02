@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../../theme';
 import MenuButton from '../../components/button.component';
-import ComputadorService from '../../services/ComputadorService';
+import SoftwareService from '../../services/SoftwareService';
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class ListComputador extends React.Component {
+export default class ListSoftware extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -134,7 +134,7 @@ export default class ListComputador extends React.Component {
     });
     this.focusSubscription = navigation.addListener('focus', () => {
       this.setState({ isRendering: true });
-      ComputadorService.findAll()
+      SoftwareService.findAll()
         .then((data) => {
           this.setState({
             dataSource: data,
@@ -157,7 +157,7 @@ export default class ListComputador extends React.Component {
     const { navigation } = this.props;
 
     const updateList = () => {
-      return ComputadorService.findAll()
+      return SoftwareService.findAll()
         .then((data) => {
           this.setState({
             dataSource: data,
@@ -173,27 +173,27 @@ export default class ListComputador extends React.Component {
     const renderItem = ({ item }) => (
       <TouchableHighlight
         onPress={() => {
-          AsyncStorage.setItem('ID', item.nr_serie);
-          navigation.navigate('ComputadorDetails');
+          AsyncStorage.setItem('ID', item.id);
+          navigation.navigate('SoftwareDetails');
         }}
         style={styles.rowFront}
         underlayColor="#D3D3D3"
       >
         <View>
           <Text style={styles.listItem}>
-            {item.marca} {item.modelo}
+            {item.fabricante} {item.versao}
           </Text>
           <Text style={styles.sublistItem}>S/N: {item.nr_serie}</Text>
         </View>
       </TouchableHighlight>
     );
     const renderHiddenItem = ({ item }) => (
-      <View style={styles.rowBack} key={item.cod_escritorio}>
+      <View style={styles.rowBack} key={item.id}>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
-            AsyncStorage.setItem('ID', item.nr_serie);
-            navigation.navigate('ChangeComputador');
+            AsyncStorage.setItem('ID', item.id);
+            navigation.navigate('ChangeSoftware');
           }}
         >
           <Text>
@@ -203,7 +203,7 @@ export default class ListComputador extends React.Component {
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnRight]}
           onPress={() =>
-            ComputadorService.delete(item.nr_serie).then((response) => {
+            SoftwareService.delete(item.id).then((response) => {
               const titulo = response.status ? 'Sucesso' : 'Erro';
               Alert.alert(titulo, response.mensagem);
               if (response.status) {
@@ -238,7 +238,7 @@ export default class ListComputador extends React.Component {
             >
               <MenuButton />
             </TouchableOpacity>
-            <Text style={styles.text_header}>Computadores</Text>
+            <Text style={styles.text_header}>Software</Text>
           </View>
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             {isRendering && (
@@ -248,14 +248,37 @@ export default class ListComputador extends React.Component {
               />
             )}
             {!isRendering && isAdmin && (
-              <SwipeListView
-                data={dataSource}
-                renderItem={renderItem}
-                renderHiddenItem={renderHiddenItem}
-                leftOpenValue={75}
-                rightOpenValue={-75}
-                keyExtractor={(item, index) => index.toString()}
-              />
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: -15,
+                    alignSelf: 'center',
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="arrow-left"
+                    size={20}
+                    style={{ flex: 3.5, marginBottom: 5, marginLeft: 10 }}
+                  />
+                  <Text style={{ flex: 4, fontWeight: theme.fontWeights.bold }}>
+                    Swipe
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="arrow-right"
+                    size={20}
+                    style={{ flex: 1, marginRight: -10 }}
+                  />
+                </View>
+                <SwipeListView
+                  data={dataSource}
+                  renderItem={renderItem}
+                  renderHiddenItem={renderHiddenItem}
+                  leftOpenValue={75}
+                  rightOpenValue={-75}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </>
             )}
             {!isRendering && !isAdmin && (
               <SwipeListView
@@ -272,7 +295,7 @@ export default class ListComputador extends React.Component {
     );
   }
 }
-ListComputador.propTypes = {
+ListSoftware.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   navigation: PropTypes.object.isRequired,
 };
