@@ -12,6 +12,11 @@ class ComputadorService {
     return data;
   }
 
+  async listarLicencas() {
+    const { data } = await this.client.get('software/listLicenses');
+    return data;
+  }
+
   async findTypeByID(id) {
     const { data } = await this.client.get('computador/findTypeByID', {
       params: {
