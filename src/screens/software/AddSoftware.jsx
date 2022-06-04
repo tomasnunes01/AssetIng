@@ -28,6 +28,7 @@ import EscritorioService from '../../services/EscritorioService';
 import MenuButton from '../../components/button.component';
 import UserService from '../../services/UserService';
 import ComputadorService from '../../services/ComputadorService';
+import SoftwareService from '../../services/SoftwareService';
 
 const styles = StyleSheet.create({
   container: {
@@ -103,7 +104,6 @@ export default function AddSoftware({ navigation }) {
   };
   const { colors } = useTheme();
 
-  const [id, setId] = useState(null);
   const [nrSerie, setNrSerie] = useState(null);
   const [fabricante, setFabricante] = useState(null);
   const [versao, setVersao] = useState(null);
@@ -115,47 +115,42 @@ export default function AddSoftware({ navigation }) {
   const [fimEmprestimo, setValidade] = useState(new Date());
   const [showEmprestimo, setShowEmprestimo] = useState(false);
   const [errorNrSerie, setErrorNrSerie] = useState(null);
-  const [errorMarca, setErrorMarca] = useState(null);
-  const [errorModelo, setErrorModelo] = useState(null);
+  const [errorFabricante, setErrorFabricante] = useState(null);
+  const [errorVersao, setErrorVersao] = useState(null);
   const [errorDescricao, setErrorDescricao] = useState(null);
-  const [errorSistemaOperativo, setErrorSistemaOperativo] = useState(null);
-  const [errorCpu, setErrorCpu] = useState(null);
-  const [errorRam, setErrorRam] = useState(null);
-  const [errorHdd, setErrorHdd] = useState(null);
-  const [errorGarantia, setErrorGarantia] = useState(null);
-  const [errorDataInstalacao, setErrorDataInstalacao] = useState(null);
+  const [errorChave, setErrorChave] = useState(null);
+  const [errorCodTipoSoftware, setErrorCodTipoSoftware] = useState(null);
+  const [errorLicenca, setErrorLicenca] = useState(null);
+  const [errorComputador, setErrorComputador] = useState(null);
   const [errorFimEmprestimo, setErrorFimEmprestimo] = useState(null);
   const [displaymode, setMode] = useState('date');
   const [isLoading, setLoading] = useState(false);
   const [isRendering, setRendering] = useState(true);
-  const [escritorioList, setEscritorioList] = useState([]);
-  const [userList, setUserList] = useState([]);
+  const [tipoSoftwareList, setTipoSoftwareList] = useState([]);
+  const [licencaList, setLicencaList] = useState([]);
   const [tipoList, setTipoList] = useState([]);
 
   const scrollViewRef = React.createRef();
-  const nrSerieInput = React.createRef();
-  const usernameInput = React.createRef();
-  const codEscritorioInput = React.createRef();
-  const codTipoInput = React.createRef();
-  const marcaInput = React.createRef();
-  const modeloInput = React.createRef();
+  const fabricanteInput = React.createRef();
+  const versaoInput = React.createRef();
+  const chaveInput = React.createRef();
+  const codTipoSoftwareInput = React.createRef();
+  const licencaInput = React.createRef();
+  const computadorInput = React.createRef();
   const descricaoInput = React.createRef();
-  const sistemaOperativoInput = React.createRef();
-  const cpuInput = React.createRef();
-  const ramInput = React.createRef();
-  const hddInput = React.createRef();
+  const fimEmprestimoInput = React.createRef();
 
   const reNrSerie = /[a-zA-Z0-9]{1,30}/;
   const reInt = /[0-9]{1,11}/;
-  const reVarChar20 = /[\w\s]{1,20}/;
+  const reVarChar45 = /[\w\s]{1,45}/;
   const reVarChar100 = /[\w\s]{0,100}/;
 
   useEffect(async () => {
     try {
-      const escritorios = await EscritorioService.findAll();
-      setEscritorioList(escritorios);
-      const users = await UserService.listar();
-      setUserList(users);
+      const tipoSoftware = await SoftwareService.listarTipos();
+      setTipoSoftwareList(tipoSoftware);
+      const tipoLicenca = await SoftwareService.listarLicencas();
+      setLicencaList(tipoLicenca);
       const tipoComputador = await ComputadorService.listarTipos();
       setTipoList(tipoComputador);
       setRendering(false);
@@ -214,26 +209,26 @@ export default function AddSoftware({ navigation }) {
 
   const validar = () => {
     let erro = false;
-    setErrorCpu(null);
+    setErrorCodTipoSoftware(null);
     setErrorDataInstalacao(null);
     setErrorDescricao(null);
     setErrorFimEmprestimo(null);
     setErrorGarantia(null);
-    setErrorHdd(null);
-    setErrorMarca(null);
-    setErrorModelo(null);
+    setErrorComputador(null);
+    setErrorFabricante(null);
+    setErrorVersao(null);
     setErrorNrSerie(null);
-    setErrorRam(null);
-    setErrorSistemaOperativo(null);
+    setErrorLicenca(null);
+    setErrorChave(null);
 
     if (!reNrSerie.test(String(nrSerie)) || nrSerie == null) {
       setErrorNrSerie('O número de série é obrigatório');
       erro = true;
-      nrSerieInput.current.shake();
-      nrSerieInput.current.focus();
+      fabricanteInput.current.shake();
+      fabricanteInput.current.focus();
     }
-    if (!reVarChar20.test(String(cpu)) && cpu !== null) {
-      setErrorCpu('Caracteres especiais não são aceites');
+    if (!reVarChar45.test(String(cpu)) && cpu !== null) {
+      setErrorCodTipoSoftware('Caracteres especiais não são aceites');
       erro = true;
       cpuInput.current.shake();
       cpuInput.current.focus();
@@ -245,38 +240,38 @@ export default function AddSoftware({ navigation }) {
       descricaoInput.current.focus();
     }
     if (!reInt.test(String(hdd)) && hdd !== null) {
-      setErrorHdd('Caracteres especiais não são aceites');
+      setErrorComputador('Caracteres especiais não são aceites');
       erro = true;
       hddInput.current.shake();
       hddInput.current.focus();
     }
-    if (!reVarChar20.test(String(marca)) || marca == null) {
-      setErrorMarca('O campo marca é obrigatório');
+    if (!reVarChar45.test(String(marca)) || marca == null) {
+      setErrorFabricante('O campo marca é obrigatório');
       erro = true;
-      marcaInput.current.shake();
-      marcaInput.current.focus();
+      licencaInput.current.shake();
+      licencaInput.current.focus();
     }
-    if (!reVarChar20.test(String(modelo)) || modelo == null) {
-      setErrorModelo('O campo modelo é obrigatório');
+    if (!reVarChar45.test(String(modelo)) || modelo == null) {
+      setErrorVersao('O campo modelo é obrigatório');
       erro = true;
-      modeloInput.current.shake();
-      modeloInput.current.focus();
+      computadorInput.current.shake();
+      computadorInput.current.focus();
     }
     if (!reInt.test(String(ram)) && ram !== null) {
-      setErrorMarca('Introduza um número inteiro, em GB');
+      setErrorFabricante('Introduza um número inteiro, em GB');
       erro = true;
       ramInput.current.shake();
       ramInput.current.focus();
     }
-    if (!reVarChar20.test(String(sistemaOperativo))) {
-      setErrorSistemaOperativo('Caracteres especiais não são aceites');
+    if (!reVarChar45.test(String(sistemaOperativo))) {
+      setErrorChave('Caracteres especiais não são aceites');
       erro = true;
-      sistemaOperativoInput.current.shake();
-      sistemaOperativoInput.current.focus();
+      fimEmprestimoInput t.current.shake();
+      fimEmprestimoInput t.current.focus();
     }
     if (!codTipoSoftware && !erro) {
       erro = true;
-      codTipoInput.current.focus();
+      codTipoSoftwareInput.current.focus();
     }
     return !erro;
   };
@@ -388,7 +383,7 @@ export default function AddSoftware({ navigation }) {
                   inputContainerStyle={styles.input}
                   errorMessage={errorNrSerie}
                   errorStyle={styles.errorStyle}
-                  ref={nrSerieInput}
+                  ref={fabricanteInput}
                   maxLength={30}
                 />
                 <Input
@@ -396,13 +391,13 @@ export default function AddSoftware({ navigation }) {
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
                     setMarca(value);
-                    setErrorMarca(null);
+                    setErrorFabricante(null);
                   }}
                   value={marca}
                   inputContainerStyle={styles.input}
-                  errorMessage={errorMarca}
+                  errorMessage={errorFabricante}
                   errorStyle={styles.errorStyle}
-                  ref={marcaInput}
+                  ref={licencaInput}
                   maxLength={20}
                 />
                 <Input
@@ -410,13 +405,13 @@ export default function AddSoftware({ navigation }) {
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
                     setModelo(value);
-                    setErrorModelo(null);
+                    setErrorVersao(null);
                   }}
                   value={modelo}
                   inputContainerStyle={styles.input}
-                  errorMessage={errorModelo}
+                  errorMessage={errorVersao}
                   errorStyle={styles.errorStyle}
-                  ref={modeloInput}
+                  ref={computadorInput}
                   maxLength={20}
                 />
                 <Input
@@ -438,13 +433,13 @@ export default function AddSoftware({ navigation }) {
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
                     setSistemaOperativo(value);
-                    setErrorSistemaOperativo(null);
+                    setErrorChave(null);
                   }}
                   value={sistemaOperativo}
                   inputContainerStyle={styles.input}
-                  errorMessage={errorSistemaOperativo}
+                  errorMessage={errorChave}
                   errorStyle={styles.errorStyle}
-                  ref={sistemaOperativoInput}
+                  ref={fimEmprestimoInput t}
                   maxLength={20}
                 />
                 <Input
@@ -452,11 +447,11 @@ export default function AddSoftware({ navigation }) {
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
                     setCpu(value);
-                    setErrorCpu(null);
+                    setErrorCodTipoSoftware(null);
                   }}
                   value={cpu}
                   inputContainerStyle={styles.input}
-                  errorMessage={errorCpu}
+                  errorMessage={errorCodTipoSoftware}
                   errorStyle={styles.errorStyle}
                   ref={cpuInput}
                   maxLength={20}
@@ -466,12 +461,12 @@ export default function AddSoftware({ navigation }) {
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
                     setRam(value);
-                    setErrorRam(null);
+                    setErrorLicenca(null);
                   }}
                   keyboardType="number-pad"
                   value={ram}
                   inputContainerStyle={styles.input}
-                  errorMessage={errorRam}
+                  errorMessage={errorLicenca}
                   errorStyle={styles.errorStyle}
                   ref={ramInput}
                   maxLength={11}
@@ -481,12 +476,12 @@ export default function AddSoftware({ navigation }) {
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
                     setHdd(value);
-                    setErrorHdd(null);
+                    setErrorComputador(null);
                   }}
                   keyboardType="number-pad"
                   value={hdd}
                   inputContainerStyle={styles.input}
-                  errorMessage={errorHdd}
+                  errorMessage={errorComputador}
                   errorStyle={styles.errorStyle}
                   ref={hddInput}
                   maxLength={11}
@@ -498,10 +493,10 @@ export default function AddSoftware({ navigation }) {
                     onValueChange={(itemValue) => setCodLicenca(itemValue)}
                     mode="dropdown"
                     style={styles.picker}
-                    ref={codEscritorioInput}
+                    ref={chaveInput}
                   >
                     {!codLicenca && <Picker.Item label="Selecione ..." />}
-                    {escritorioList.map((item) => (
+                    {tipoSoftwareList.map((item) => (
                       <Picker.Item
                         label={item.morada}
                         value={item.cod_escritorio}
@@ -517,10 +512,10 @@ export default function AddSoftware({ navigation }) {
                     onValueChange={(itemValue) => setUsername(itemValue)}
                     mode="dropdown"
                     style={styles.picker}
-                    ref={usernameInput}
+                    ref={versaoInput}
                   >
                     {!username && <Picker.Item label="Selecione ..." />}
-                    {userList.map((item) => (
+                    {licencaList.map((item) => (
                       <Picker.Item
                         label={item.username}
                         value={item.id}
@@ -536,7 +531,7 @@ export default function AddSoftware({ navigation }) {
                     onValueChange={(itemValue) => setCodTipoSoftware(itemValue)}
                     mode="dropdown"
                     style={styles.picker}
-                    ref={codTipoInput}
+                    ref={codTipoSoftwareInput}
                   >
                     {!codTipoSoftware && <Picker.Item label="Selecione ..." />}
                     {tipoList.map((item) => (
