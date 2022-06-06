@@ -6,25 +6,21 @@ import {
   StyleSheet,
   StatusBar,
   KeyboardAvoidingView,
-  Alert,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
-import { Picker } from '@react-native-picker/picker';
 import { ThemeProvider } from 'styled-components/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
 import { theme } from '../../theme';
 import {
   FormButton,
   FormButtonView,
 } from '../../components/login-form.component';
-import ComputadorService from '../../services/ComputadorService';
 import MenuButton from '../../components/button.component';
 import SoftwareService from '../../services/SoftwareService';
 
