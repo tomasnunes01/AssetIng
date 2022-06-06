@@ -223,8 +223,8 @@ export default function AddUser() {
         .registar(data)
         .then((response) => {
           setLoading(false);
-          const titulo = response.data.status ? 'Sucesso' : 'Erro';
-          Alert.alert(titulo, response.data.mensagem);
+          const titulo = response.status ? 'Sucesso' : 'Erro';
+          Alert.alert(titulo, response.mensagem);
           setEmail(null);
           setNome(null);
           setApelido(null);
@@ -356,7 +356,7 @@ export default function AddUser() {
                   ref={passwordInput}
                   maxLength={255}
                 />
-                <View style={{ flexDirection: 'row', marginTop: '-5%' }}>
+                <View style={{ flexDirection: 'row', marginLeft: '1%' }}>
                   <Picker
                     selectedValue={pickerValueHolder}
                     onValueChange={(itemValue) =>
