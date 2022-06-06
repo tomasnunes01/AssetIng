@@ -22,6 +22,11 @@ import ListComputador from './src/screens/computador/ListComputador';
 import ChangeComputador from './src/screens/computador/ChangeComputador';
 import ComputadorDetails from './src/screens/computador/ComputadorDetails';
 import RelatorioScreen from './src/screens/relatorio/Relatorio';
+import { SoftwareScreen } from './src/screens/software/Softwares';
+import ListSoftware from './src/screens/software/ListSoftware';
+import ChangeSoftware from './src/screens/software/ChangeSoftware';
+import AddSoftware from './src/screens/software/AddSoftware';
+import SoftwareDetails from './src/screens/software/SoftwareDetails';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -40,6 +45,7 @@ function MyDrawer() {
       <Drawer.Screen name="Conta" component={HomeScreen} />
       <Drawer.Screen name="Computador" component={ComputadorScreen} />
       <Drawer.Screen name="Escritório" component={EscritorioScreen} />
+      <Drawer.Screen name="Software" component={SoftwareScreen} />
     </Drawer.Navigator>
   );
 }
@@ -68,6 +74,10 @@ function MyStack() {
       <Stack.Screen name="ListComputers" component={ListComputador} />
       <Stack.Screen name="ChangeComputador" component={ChangeComputador} />
       <Stack.Screen name="ComputadorDetails" component={ComputadorDetails} />
+      <Stack.Screen name="AddSoftware" component={AddSoftware} />
+      <Stack.Screen name="ListSoftware" component={ListSoftware} />
+      <Stack.Screen name="ChangeSoftware" component={ChangeSoftware} />
+      <Stack.Screen name="SoftwareDetails" component={SoftwareDetails} />
       <Stack.Screen name="RelatorioScreen" component={RelatorioScreen} />
     </Stack.Navigator>
   );
