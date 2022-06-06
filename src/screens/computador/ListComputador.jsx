@@ -248,14 +248,37 @@ export default class ListComputador extends React.Component {
               />
             )}
             {!isRendering && isAdmin && (
-              <SwipeListView
-                data={dataSource}
-                renderItem={renderItem}
-                renderHiddenItem={renderHiddenItem}
-                leftOpenValue={75}
-                rightOpenValue={-75}
-                keyExtractor={(item, index) => index.toString()}
-              />
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: -15,
+                    alignSelf: 'center',
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="arrow-left"
+                    size={20}
+                    style={{ flex: 3.5, marginBottom: 5, marginLeft: 10 }}
+                  />
+                  <Text style={{ flex: 4, fontWeight: theme.fontWeights.bold }}>
+                    Swipe
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="arrow-right"
+                    size={20}
+                    style={{ flex: 1, marginRight: -10 }}
+                  />
+                </View>
+                <SwipeListView
+                  data={dataSource}
+                  renderItem={renderItem}
+                  renderHiddenItem={renderHiddenItem}
+                  leftOpenValue={75}
+                  rightOpenValue={-75}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </>
             )}
             {!isRendering && !isAdmin && (
               <SwipeListView
