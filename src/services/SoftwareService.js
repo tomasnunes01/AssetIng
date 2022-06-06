@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Config from '../../util/Config';
 
-class ComputadorService {
+class SoftwareService {
   constructor(config) {
     const { API_URL: baseURL } = config;
     this.client = axios.create({ baseURL });
@@ -18,7 +18,7 @@ class ComputadorService {
   }
 
   async findTypeByID(id) {
-    const { data } = await this.client.get('computador/findTypeByID', {
+    const { data } = await this.client.get('software/findTypeByID', {
       params: {
         id,
       },
@@ -27,7 +27,7 @@ class ComputadorService {
   }
 
   async registar(data) {
-    const req = await this.client.post('computador/registar', data);
+    const req = await this.client.post('software/registar', data);
     return req;
   }
 
@@ -37,20 +37,20 @@ class ComputadorService {
   }
 
   async delete(id) {
-    const response = await this.client.delete('computador', {
+    const response = await this.client.delete('software', {
       params: {
-        nr_serie: id,
+        id,
       },
     });
     return response.data;
   }
 
   async atualizar(data) {
-    return this.client.patch('computador/atualizar', data);
+    return this.client.patch('software/atualizar', data);
   }
 
   async findByID(id) {
-    const { data } = await this.client.get('computador/findByID', {
+    const { data } = await this.client.get('software/findByID', {
       params: {
         id,
       },
@@ -58,4 +58,4 @@ class ComputadorService {
     return data;
   }
 }
-export default new ComputadorService(Config);
+export default new SoftwareService(Config);

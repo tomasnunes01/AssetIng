@@ -24,9 +24,7 @@ import {
   FormButtonView,
 } from '../../components/login-form.component';
 import { theme } from '../../theme';
-import EscritorioService from '../../services/EscritorioService';
 import MenuButton from '../../components/button.component';
-import UserService from '../../services/UserService';
 import ComputadorService from '../../services/ComputadorService';
 import SoftwareService from '../../services/SoftwareService';
 
@@ -112,25 +110,22 @@ export default function AddSoftware({ navigation }) {
   const [codTipoSoftware, setCodTipoSoftware] = useState(null);
   const [codLicenca, setCodLicenca] = useState(null);
   const [computador, setComputador] = useState(null);
-  const [fimEmprestimo, setValidade] = useState(new Date());
-  const [showEmprestimo, setShowEmprestimo] = useState(false);
+  const [validade, setValidade] = useState(new Date());
+  const [showValidade, setShowValidade] = useState(false);
   const [errorNrSerie, setErrorNrSerie] = useState(null);
   const [errorFabricante, setErrorFabricante] = useState(null);
   const [errorVersao, setErrorVersao] = useState(null);
   const [errorDescricao, setErrorDescricao] = useState(null);
   const [errorChave, setErrorChave] = useState(null);
-  const [errorCodTipoSoftware, setErrorCodTipoSoftware] = useState(null);
-  const [errorLicenca, setErrorLicenca] = useState(null);
-  const [errorComputador, setErrorComputador] = useState(null);
-  const [errorFimEmprestimo, setErrorFimEmprestimo] = useState(null);
   const [displaymode, setMode] = useState('date');
   const [isLoading, setLoading] = useState(false);
   const [isRendering, setRendering] = useState(true);
   const [tipoSoftwareList, setTipoSoftwareList] = useState([]);
   const [licencaList, setLicencaList] = useState([]);
-  const [tipoList, setTipoList] = useState([]);
+  const [computadorList, setComputadorList] = useState([]);
 
   const scrollViewRef = React.createRef();
+  const nrSerieInput = React.createRef();
   const fabricanteInput = React.createRef();
   const versaoInput = React.createRef();
   const chaveInput = React.createRef();
@@ -138,10 +133,9 @@ export default function AddSoftware({ navigation }) {
   const licencaInput = React.createRef();
   const computadorInput = React.createRef();
   const descricaoInput = React.createRef();
-  const fimEmprestimoInput = React.createRef();
 
   const reNrSerie = /[a-zA-Z0-9]{1,30}/;
-  const reInt = /[0-9]{1,11}/;
+  const reVarChar20 = /[\w\s]{1,20}/;
   const reVarChar45 = /[\w\s]{1,45}/;
   const reVarChar100 = /[\w\s]{0,100}/;
 
@@ -151,8 +145,8 @@ export default function AddSoftware({ navigation }) {
       setTipoSoftwareList(tipoSoftware);
       const tipoLicenca = await SoftwareService.listarLicencas();
       setLicencaList(tipoLicenca);
-      const tipoComputador = await ComputadorService.listarTipos();
-      setTipoList(tipoComputador);
+      const computadorObj = await ComputadorService.findAll();
+      setComputadorList(computadorObj);
       setRendering(false);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -160,78 +154,60 @@ export default function AddSoftware({ navigation }) {
     }
   }, []);
 
-  const changeGarantiaDate = (event, selectedDate) => {
-    const currentDate = selectedDate || garantia;
-    setGarantia(currentDate);
+  const changeValidadeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || validade;
+    setValidade(currentDate);
     if (Platform.OS === 'android') {
-      setShowGarantia(false);
+      setShowValidade(false);
     }
   };
-  const showModeGarantia = (currentMode) => {
-    if (showGarantia) {
-      setShowGarantia(false);
+  const showModeValidade = (currentMode) => {
+    if (showValidade) {
+      setShowValidade(false);
     } else {
-      setShowGarantia(true);
+      setShowValidade(true);
     }
     setMode(currentMode);
   };
-  const displayGarantiaPicker = () => {
-    showModeGarantia('date');
+  const displayValidadePicker = () => {
+    showModeValidade('date');
   };
-  const displayInstalacaoPicker = () => {
-    if (showDataInstalacao) {
-      setShowDataInstalacao(false);
-    } else {
-      setShowDataInstalacao(true);
-    }
-  };
-  const changeInstalacaoDate = (event, selectedDate) => {
-    const currentDate = selectedDate || dataInstalacao;
-    setDataInstalacao(currentDate);
-    if (Platform.OS === 'android') {
-      setShowDataInstalacao(false);
-    }
-  };
-  const displayEmprestimoPicker = () => {
-    if (showEmprestimo) {
-      setShowEmprestimo(false);
-    } else {
-      setShowEmprestimo(true);
-    }
-  };
-  const changeEmprestimoDate = (event, selectedDate) => {
-    const currentDate = selectedDate || fimEmprestimo;
-    setValidade(currentDate);
-    if (Platform.OS === 'android') {
-      setShowEmprestimo(false);
-    }
-  };
-
   const validar = () => {
     let erro = false;
-    setErrorCodTipoSoftware(null);
-    setErrorDataInstalacao(null);
-    setErrorDescricao(null);
-    setErrorFimEmprestimo(null);
-    setErrorGarantia(null);
-    setErrorComputador(null);
+
+    setErrorNrSerie(null);
     setErrorFabricante(null);
     setErrorVersao(null);
-    setErrorNrSerie(null);
-    setErrorLicenca(null);
+    setErrorDescricao(null);
     setErrorChave(null);
 
     if (!reNrSerie.test(String(nrSerie)) || nrSerie == null) {
       setErrorNrSerie('O número de série é obrigatório');
       erro = true;
+      nrSerieInput.current.shake();
+      nrSerieInput.current.focus();
+    }
+    if (!reVarChar20.test(String(fabricante)) && fabricante !== null) {
+      setErrorFabricante('Caracteres especiais não são aceites');
+      erro = true;
+      fabricanteInput.current.shake();
+      fabricanteInput.current.focus();
+    } else if (fabricante == null) {
+      setErrorFabricante('O campo fabricante é obrigatório');
+      erro = true;
       fabricanteInput.current.shake();
       fabricanteInput.current.focus();
     }
-    if (!reVarChar45.test(String(cpu)) && cpu !== null) {
-      setErrorCodTipoSoftware('Caracteres especiais não são aceites');
+    if (!reVarChar20.test(String(versao)) && versao !== null) {
+      setErrorVersao('Caracteres especiais não são aceites');
       erro = true;
-      cpuInput.current.shake();
-      cpuInput.current.focus();
+      versaoInput.current.shake();
+      versaoInput.current.focus();
+    } else if (versao == null) {
+      setErrorVersao('O campo versao é obrigatório');
+      erro = true;
+      versaoInput.current.shake();
+      versaoInput.current.focus();
     }
     if (!reVarChar100.test(String(descricao)) && descricao !== null) {
       setErrorDescricao('Caracteres especiais não são aceites');
@@ -239,39 +215,23 @@ export default function AddSoftware({ navigation }) {
       descricaoInput.current.shake();
       descricaoInput.current.focus();
     }
-    if (!reInt.test(String(hdd)) && hdd !== null) {
-      setErrorComputador('Caracteres especiais não são aceites');
-      erro = true;
-      hddInput.current.shake();
-      hddInput.current.focus();
-    }
-    if (!reVarChar45.test(String(marca)) || marca == null) {
-      setErrorFabricante('O campo marca é obrigatório');
-      erro = true;
-      licencaInput.current.shake();
-      licencaInput.current.focus();
-    }
-    if (!reVarChar45.test(String(modelo)) || modelo == null) {
-      setErrorVersao('O campo modelo é obrigatório');
-      erro = true;
-      computadorInput.current.shake();
-      computadorInput.current.focus();
-    }
-    if (!reInt.test(String(ram)) && ram !== null) {
-      setErrorFabricante('Introduza um número inteiro, em GB');
-      erro = true;
-      ramInput.current.shake();
-      ramInput.current.focus();
-    }
-    if (!reVarChar45.test(String(sistemaOperativo))) {
+    if (!reVarChar45.test(String(chave)) && chave !== null) {
       setErrorChave('Caracteres especiais não são aceites');
       erro = true;
-      fimEmprestimoInput t.current.shake();
-      fimEmprestimoInput t.current.focus();
+      chaveInput.current.shake();
+      chaveInput.current.focus();
     }
     if (!codTipoSoftware && !erro) {
       erro = true;
       codTipoSoftwareInput.current.focus();
+    }
+    if (!codLicenca && !erro) {
+      erro = true;
+      licencaInput.current.focus();
+    }
+    if (!computador && !erro) {
+      erro = true;
+      computadorInput.current.focus();
     }
     return !erro;
   };
@@ -282,41 +242,31 @@ export default function AddSoftware({ navigation }) {
 
       const data = {
         nr_serie: nrSerie,
-        cod_utilizador: username,
-        cod_escritorio: codLicenca,
-        cod_tipo: codTipoSoftware,
-        marca,
-        modelo,
+        fabricante,
+        versao,
         descricao,
-        so: sistemaOperativo,
-        cpu,
-        ram,
-        hdd,
-        garantia,
-        data_instalacao: dataInstalacao,
-        fim_emprestimo: fimEmprestimo,
+        chave,
+        cod_tipo_software: codTipoSoftware,
+        cod_tipo_licenca: codLicenca,
+        computador,
+        validade,
       };
 
-      ComputadorService.registar(data)
+      SoftwareService.registar(data)
         .then((response) => {
           setLoading(false);
           const titulo = response.data.status ? 'Sucesso' : 'Erro';
           Alert.alert(titulo, response.data.mensagem);
           if (response.data.status) {
-            setCodLicenca(null);
-            setCodTipoSoftware(null);
-            setCpu(null);
-            setDataInstalacao(new Date());
-            setDescricao(null);
-            setValidade(new Date());
-            setGarantia(new Date());
-            setHdd(null);
-            setMarca(null);
-            setModelo(null);
             setNrSerie(null);
-            setRam(null);
-            setSistemaOperativo(null);
-            setUsername(null);
+            setFabricante(null);
+            setVersao(null);
+            setDescricao(null);
+            setChave(null);
+            setCodTipoSoftware(null);
+            setCodLicenca(null);
+            setComputador(null);
+            setValidade(new Date());
           }
         })
         .catch((error) => {
@@ -345,7 +295,7 @@ export default function AddSoftware({ navigation }) {
           >
             <MenuButton />
           </TouchableOpacity>
-          <Text style={styles.text_header}>Adicionar Computador</Text>
+          <Text style={styles.text_header}>Adicionar Software</Text>
         </View>
         <Animatable.View
           animation="fadeInUpBig"
@@ -383,35 +333,35 @@ export default function AddSoftware({ navigation }) {
                   inputContainerStyle={styles.input}
                   errorMessage={errorNrSerie}
                   errorStyle={styles.errorStyle}
-                  ref={fabricanteInput}
-                  maxLength={30}
+                  ref={nrSerieInput}
+                  maxLength={45}
                 />
                 <Input
-                  placeholder="Marca"
+                  placeholder="Fabricante"
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
-                    setMarca(value);
+                    setFabricante(value);
                     setErrorFabricante(null);
                   }}
-                  value={marca}
+                  value={fabricante}
                   inputContainerStyle={styles.input}
                   errorMessage={errorFabricante}
                   errorStyle={styles.errorStyle}
-                  ref={licencaInput}
+                  ref={fabricanteInput}
                   maxLength={20}
                 />
                 <Input
-                  placeholder="Modelo"
+                  placeholder="Versão"
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
-                    setModelo(value);
+                    setVersao(value);
                     setErrorVersao(null);
                   }}
-                  value={modelo}
+                  value={versao}
                   inputContainerStyle={styles.input}
                   errorMessage={errorVersao}
                   errorStyle={styles.errorStyle}
-                  ref={computadorInput}
+                  ref={versaoInput}
                   maxLength={20}
                 />
                 <Input
@@ -429,103 +379,21 @@ export default function AddSoftware({ navigation }) {
                   maxLength={100}
                 />
                 <Input
-                  placeholder="Sistema Operativo"
+                  placeholder="Chave"
                   placeholderTextColor="#686868"
                   onChangeText={(value) => {
-                    setSistemaOperativo(value);
+                    setChave(value);
                     setErrorChave(null);
                   }}
-                  value={sistemaOperativo}
+                  value={chave}
                   inputContainerStyle={styles.input}
                   errorMessage={errorChave}
                   errorStyle={styles.errorStyle}
-                  ref={fimEmprestimoInput t}
-                  maxLength={20}
-                />
-                <Input
-                  placeholder="Processador"
-                  placeholderTextColor="#686868"
-                  onChangeText={(value) => {
-                    setCpu(value);
-                    setErrorCodTipoSoftware(null);
-                  }}
-                  value={cpu}
-                  inputContainerStyle={styles.input}
-                  errorMessage={errorCodTipoSoftware}
-                  errorStyle={styles.errorStyle}
-                  ref={cpuInput}
-                  maxLength={20}
-                />
-                <Input
-                  placeholder="RAM (GB)"
-                  placeholderTextColor="#686868"
-                  onChangeText={(value) => {
-                    setRam(value);
-                    setErrorLicenca(null);
-                  }}
-                  keyboardType="number-pad"
-                  value={ram}
-                  inputContainerStyle={styles.input}
-                  errorMessage={errorLicenca}
-                  errorStyle={styles.errorStyle}
-                  ref={ramInput}
-                  maxLength={11}
-                />
-                <Input
-                  placeholder="Capacidade de disco (GB)"
-                  placeholderTextColor="#686868"
-                  onChangeText={(value) => {
-                    setHdd(value);
-                    setErrorComputador(null);
-                  }}
-                  keyboardType="number-pad"
-                  value={hdd}
-                  inputContainerStyle={styles.input}
-                  errorMessage={errorComputador}
-                  errorStyle={styles.errorStyle}
-                  ref={hddInput}
-                  maxLength={11}
+                  ref={chaveInput}
+                  maxLength={45}
                 />
                 <View style={styles.pickerView}>
-                  <Text style={styles.labelPicker}>Escritório:</Text>
-                  <Picker
-                    selectedValue={codLicenca}
-                    onValueChange={(itemValue) => setCodLicenca(itemValue)}
-                    mode="dropdown"
-                    style={styles.picker}
-                    ref={chaveInput}
-                  >
-                    {!codLicenca && <Picker.Item label="Selecione ..." />}
-                    {tipoSoftwareList.map((item) => (
-                      <Picker.Item
-                        label={item.morada}
-                        value={item.cod_escritorio}
-                        key={item.cod_escritorio}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-                <View style={styles.pickerView}>
-                  <Text style={styles.labelPicker}>Utilizador:</Text>
-                  <Picker
-                    selectedValue={username}
-                    onValueChange={(itemValue) => setUsername(itemValue)}
-                    mode="dropdown"
-                    style={styles.picker}
-                    ref={versaoInput}
-                  >
-                    {!username && <Picker.Item label="Selecione ..." />}
-                    {licencaList.map((item) => (
-                      <Picker.Item
-                        label={item.username}
-                        value={item.id}
-                        key={item.id}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-                <View style={styles.pickerView}>
-                  <Text style={styles.labelPicker}>Tipo de Computador:</Text>
+                  <Text style={styles.labelPicker}>Tipo de Software:</Text>
                   <Picker
                     selectedValue={codTipoSoftware}
                     onValueChange={(itemValue) => setCodTipoSoftware(itemValue)}
@@ -534,7 +402,7 @@ export default function AddSoftware({ navigation }) {
                     ref={codTipoSoftwareInput}
                   >
                     {!codTipoSoftware && <Picker.Item label="Selecione ..." />}
-                    {tipoList.map((item) => (
+                    {tipoSoftwareList.map((item) => (
                       <Picker.Item
                         label={item.tipo}
                         value={item.cod_tipo}
@@ -543,84 +411,63 @@ export default function AddSoftware({ navigation }) {
                     ))}
                   </Picker>
                 </View>
-                {showGarantia && (
+                <View style={styles.pickerView}>
+                  <Text style={styles.labelPicker}>Tipo de Licença:</Text>
+                  <Picker
+                    selectedValue={codLicenca}
+                    onValueChange={(itemValue) => setCodLicenca(itemValue)}
+                    mode="dropdown"
+                    style={styles.picker}
+                    ref={licencaInput}
+                  >
+                    {!codLicenca && <Picker.Item label="Selecione ..." />}
+                    {licencaList.map((item) => (
+                      <Picker.Item
+                        label={item.tipo}
+                        value={item.cod_tipo}
+                        key={item.cod_tipo}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+                <View style={styles.pickerView}>
+                  <Text style={styles.labelPicker}>Computador:</Text>
+                  <Picker
+                    selectedValue={computador}
+                    onValueChange={(itemValue) => setComputador(itemValue)}
+                    mode="dropdown"
+                    style={styles.picker}
+                    ref={computadorInput}
+                  >
+                    <Picker.Item label="Selecione ..." value={null} />
+                    {computadorList.map((item) => (
+                      <Picker.Item
+                        label={item.tipo}
+                        value={item.cod_tipo}
+                        key={item.cod_tipo}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+                {showValidade && (
                   <DateTimePicker
                     testID="dateTimePicker"
-                    value={garantia}
+                    value={validade}
                     mode={displaymode}
                     is24Hour
                     display="spinner"
-                    onChange={changeGarantiaDate}
+                    onChange={changeValidadeDate}
                   />
                 )}
                 <TouchableOpacity
-                  onPress={displayGarantiaPicker}
+                  onPress={displayValidadePicker}
                   style={{ flexDirection: 'row' }}
                 >
                   <Input
-                    label="Fim de garantia:"
+                    label="Validade:"
                     placeholderTextColor="#686868"
-                    value={moment(garantia).format('DD/MM/YYYY')}
+                    value={moment(validade).format('DD/MM/YYYY')}
                     inputContainerStyle={styles.inputMedio}
-                    errorMessage={errorGarantia}
-                    errorStyle={styles.errorStyle}
-                    disabled
-                  />
-                  <MaterialCommunityIcons
-                    name="calendar"
-                    size={30}
-                    style={styles.logoInputMedio}
-                  />
-                </TouchableOpacity>
-                {showDataInstalacao && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={dataInstalacao}
-                    mode="date"
-                    is24Hour
-                    display="spinner"
-                    onChange={changeInstalacaoDate}
-                  />
-                )}
-                <TouchableOpacity
-                  onPress={displayInstalacaoPicker}
-                  style={{ flexDirection: 'row' }}
-                >
-                  <Input
-                    label="Data de instalação:"
-                    placeholderTextColor="#686868"
-                    value={moment(dataInstalacao).format('DD/MM/YYYY')}
-                    inputContainerStyle={styles.inputMedio}
-                    errorMessage={errorDataInstalacao}
-                    errorStyle={styles.errorStyle}
-                    disabled
-                  />
-                  <MaterialCommunityIcons
-                    name="calendar"
-                    size={30}
-                    style={styles.logoInputMedio}
-                  />
-                </TouchableOpacity>
-                {showEmprestimo && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={fimEmprestimo}
-                    mode="date"
-                    is24Hour
-                    display="spinner"
-                    onChange={changeEmprestimoDate}
-                  />
-                )}
-                <TouchableOpacity
-                  onPress={displayEmprestimoPicker}
-                  style={{ flexDirection: 'row' }}
-                >
-                  <Input
-                    label="Fim de Empréstimo:"
-                    placeholderTextColor="#686868"
-                    value={moment(fimEmprestimo).format('DD/MM/YYYY')}
-                    inputContainerStyle={styles.inputMedio}
-                    errorMessage={errorFimEmprestimo}
                     errorStyle={styles.errorStyle}
                     disabled
                   />
