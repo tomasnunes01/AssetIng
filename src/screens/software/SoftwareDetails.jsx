@@ -6,15 +6,18 @@ import {
   StyleSheet,
   StatusBar,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker';
 import { ThemeProvider } from 'styled-components/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from 'moment';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
 import { theme } from '../../theme';
 import {
@@ -22,7 +25,8 @@ import {
   FormButtonView,
 } from '../../components/login-form.component';
 import ComputadorService from '../../services/ComputadorService';
-import UserService from '../../services/UserService';
+import MenuButton from '../../components/button.component';
+import SoftwareService from '../../services/SoftwareService';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,115 +35,98 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingTop: Platform.OS === 'ios' ? 85 : 60,
+    paddingHorizontal: 15,
+    paddingBottom: 30,
   },
   footer: {
-    flex: 4,
-    backgroundColor: theme.colors.container.background,
+    flex: 15,
+    backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingTop: 5,
   },
   text_header: {
     color: '#fff',
     fontWeight: theme.fontWeights.bold,
     fontSize: theme.fontSizes.title,
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
+    flex: 6,
+    marginTop: -2,
   },
   input: {
     paddingLeft: 1,
     color: '#000000',
     borderBottomWidth: 1,
   },
-  inputNome: {
-    paddingLeft: 1,
+  picker: {
     color: '#000000',
-    borderBottomWidth: 1,
-    width: '45%',
+    width: '50%',
+    flex: 2,
   },
-  inputApelido: {
-    paddingLeft: 1,
-    color: '#000000',
-    borderBottomWidth: 1,
-    width: '45%',
-    marginLeft: '-50%',
+  labelPicker: {
+    flex: 1,
+    fontSize: theme.fontSizes.body,
+    alignSelf: 'center',
+  },
+  pickerView: {
+    borderBottomWidth: 0.7,
+    marginHorizontal: 10,
+    flexDirection: 'row',
+    marginBottom: '4%',
   },
   errorStyle: {
     marginLeft: 0,
   },
-  erroApelido: {
-    marginLeft: '-50%',
+  inputMedio: {
+    paddingLeft: 1,
+    color: '#000000',
+    borderBottomWidth: 1,
+    width: '100%',
   },
-  errorMsg: {
-    color: '#FF0000',
-    fontSize: 14,
+  logoInputMedio: {
+    paddingLeft: 1,
+    color: '#000000',
+    width: '20%',
+    marginTop: '5%',
+    marginLeft: '-11%',
   },
 });
 
-export default function ComputadorDetails({ navigation }) {
-  ComputadorDetails.propTypes = {
+export default function SoftwareDetails({ navigation }) {
+  SoftwareDetails.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     navigation: PropTypes.object.isRequired,
   };
   const { colors } = useTheme();
 
   const [nrSerie, setNrSerie] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [codEscritorio, setCodEscritorio] = useState(null);
-  const [codTipo, setCodTipo] = useState(null);
-  const [marca, setMarca] = useState(null);
-  const [modelo, setModelo] = useState(null);
+  const [fabricante, setFabricante] = useState(null);
+  const [versao, setVersao] = useState(null);
   const [descricao, setDescricao] = useState(null);
-  const [sistemaOperativo, setSistemaOperativo] = useState(null);
-  const [cpu, setCpu] = useState(null);
-  const [ram, setRam] = useState(null);
-  const [hdd, setHdd] = useState(null);
-  const [garantia, setGarantia] = useState(new Date());
-  const [dataInstalacao, setDataInstalacao] = useState(new Date());
-  const [fimEmprestimo, setFimEmprestimo] = useState(new Date());
+  const [chave, setChave] = useState(null);
+  const [codTipoSoftware, setCodTipoSoftware] = useState(null);
+  const [codLicenca, setCodLicenca] = useState(null);
+  const [computador, setComputador] = useState(null);
+  const [validade, setValidade] = useState(new Date());
   const [isRendering, setRendering] = useState(true);
 
   useEffect(async () => {
     AsyncStorage.getItem('ID').then((fromAsyncId) => {
-      ComputadorService.findByID(fromAsyncId).then((response) => {
+      SoftwareService.findByID(fromAsyncId).then((response) => {
         setNrSerie(response.nr_serie);
-        setCodEscritorio(response.cod_escritorio.morada);
-        ComputadorService.findTypeByID(response.cod_tipo).then((data) => {
-          setCodTipo(data.tipo);
-        });
-        UserService.findByID(response.cod_utilizador).then((data) => {
-          setUsername(data.username);
-        });
-        setMarca(response.marca);
-        setModelo(response.modelo);
+        setFabricante(response.fabricante);
+        setVersao(response.versao);
         setDescricao(response.descricao);
-        setSistemaOperativo(response.so);
-        setCpu(response.cpu);
-        setRam(response.ram.toString());
-        setHdd(response.hdd.toString());
-        setGarantia(response.garantia);
-        setDataInstalacao(response.data_instalacao);
-        setFimEmprestimo(response.fim_emprestimo);
+        setChave(response.chave);
+        setCodTipoSoftware(response.cod_tipo_software.tipo);
+        setCodLicenca(response.cod_tipo_licenca.tipo);
+        setComputador(
+          `${response.computador.marca} ${response.computador.modelo}: ${response.computador.nr_serie}`,
+        );
+        setValidade(response.validade);
         setRendering(false);
       });
     });
@@ -156,7 +143,15 @@ export default function ComputadorDetails({ navigation }) {
           backgroundColor={theme.colors.container.header}
         />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Dados do Computador</Text>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+            }}
+            onPress={() => navigation.openDrawer()}
+          >
+            <MenuButton />
+          </TouchableOpacity>
+          <Text style={styles.text_header}>Detalhes do Software</Text>
         </View>
         <Animatable.View
           animation="fadeInUpBig"
@@ -189,14 +184,14 @@ export default function ComputadorDetails({ navigation }) {
                   disabled
                 />
                 <Input
-                  label="Marca"
-                  value={marca}
+                  label="Fabricante"
+                  value={fabricante}
                   inputContainerStyle={styles.input}
                   disabled
                 />
                 <Input
-                  label="Modelo"
-                  value={modelo}
+                  label="Versão"
+                  value={versao}
                   inputContainerStyle={styles.input}
                   disabled
                 />
@@ -207,78 +202,33 @@ export default function ComputadorDetails({ navigation }) {
                   disabled
                 />
                 <Input
-                  label="Sistema Operativo"
-                  value={sistemaOperativo}
+                  label="Chave"
+                  value={chave}
                   inputContainerStyle={styles.input}
                   disabled
                 />
                 <Input
-                  label="Processador"
-                  value={cpu}
+                  label="Tipo de Software"
+                  value={codTipoSoftware}
                   inputContainerStyle={styles.input}
                   disabled
                 />
                 <Input
-                  label="RAM (GB)"
-                  keyboardType="number-pad"
-                  value={ram}
+                  label="Tipo de Licença"
+                  value={codLicenca}
                   inputContainerStyle={styles.input}
                   disabled
                 />
                 <Input
-                  label="Capacidade de disco (GB)"
-                  value={hdd}
-                  inputContainerStyle={styles.input}
-                  disabled
-                />
-                <Input
-                  label="Escritório"
-                  value={codEscritorio}
-                  inputContainerStyle={styles.input}
-                  disabled
-                />
-                <Input
-                  label="Username"
-                  value={username}
-                  inputContainerStyle={styles.input}
-                  disabled
-                />
-                <Input
-                  label="Tipo de Computador"
-                  value={codTipo}
+                  label="Computador"
+                  value={computador}
                   inputContainerStyle={styles.input}
                   disabled
                 />
                 <TouchableOpacity style={{ flexDirection: 'row' }}>
                   <Input
-                    label="Fim de garantia:"
-                    value={moment(garantia).format('DD/MM/YYYY')}
-                    inputContainerStyle={styles.inputMedio}
-                    disabled
-                  />
-                  <MaterialCommunityIcons
-                    name="calendar"
-                    size={30}
-                    style={styles.logoInputMedio}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'row' }}>
-                  <Input
-                    label="Data de instalação:"
-                    value={moment(dataInstalacao).format('DD/MM/YYYY')}
-                    inputContainerStyle={styles.inputMedio}
-                    disabled
-                  />
-                  <MaterialCommunityIcons
-                    name="calendar"
-                    size={30}
-                    style={styles.logoInputMedio}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'row' }}>
-                  <Input
-                    label="Fim de Empréstimo:"
-                    value={moment(fimEmprestimo).format('DD/MM/YYYY')}
+                    label="Validade"
+                    value={moment(validade).format('DD/MM/YYYY')}
                     inputContainerStyle={styles.inputMedio}
                     disabled
                   />

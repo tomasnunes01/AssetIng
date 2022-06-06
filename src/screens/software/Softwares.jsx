@@ -49,7 +49,7 @@ export function SoftwareScreen() {
         />
       )}
       <Tab.Screen
-        name="Software"
+        name="Softwares"
         component={ListSoftware}
         options={{
           tabBarLabel: 'Software',

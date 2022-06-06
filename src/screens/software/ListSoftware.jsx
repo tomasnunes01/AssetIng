@@ -173,7 +173,7 @@ export default class ListSoftware extends React.Component {
     const renderItem = ({ item }) => (
       <TouchableHighlight
         onPress={() => {
-          AsyncStorage.setItem('ID', item.id);
+          AsyncStorage.setItem('ID', String(item.id));
           navigation.navigate('SoftwareDetails');
         }}
         style={styles.rowFront}
@@ -192,7 +192,7 @@ export default class ListSoftware extends React.Component {
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backLeftBtn]}
           onPress={() => {
-            AsyncStorage.setItem('ID', item.id);
+            AsyncStorage.setItem('ID', String(item.id));
             navigation.navigate('ChangeSoftware');
           }}
         >

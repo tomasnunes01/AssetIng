@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
   Platform,
-  ScrollView,
   StyleSheet,
   StatusBar,
-  Alert,
   KeyboardAvoidingView,
-  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Input, Text } from 'react-native-elements';
-import * as Animatable from 'react-native-animatable';
-import { useTheme } from 'react-native-paper';
-import { ThemeProvider } from 'styled-components/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import PropTypes from 'prop-types';
+import * as Animatable from 'react-native-animatable';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker';
+import { ThemeProvider } from 'styled-components/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from 'moment';
-import { Picker } from '@react-native-picker/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { ScrollView } from 'react-native-gesture-handler';
+import { theme } from '../../theme';
 import {
   FormButton,
   FormButtonView,
 } from '../../components/login-form.component';
-import { theme } from '../../theme';
-import MenuButton from '../../components/button.component';
 import ComputadorService from '../../services/ComputadorService';
+import MenuButton from '../../components/button.component';
 import SoftwareService from '../../services/SoftwareService';
 
 const styles = StyleSheet.create({
@@ -95,13 +95,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function AddSoftware({ navigation }) {
-  AddSoftware.propTypes = {
+export default function ChangeSoftware({ navigation }) {
+  ChangeSoftware.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     navigation: PropTypes.object.isRequired,
   };
   const { colors } = useTheme();
 
+  const [id, setID] = useState(null);
   const [nrSerie, setNrSerie] = useState(null);
   const [fabricante, setFabricante] = useState(null);
   const [versao, setVersao] = useState(null);
@@ -140,18 +141,30 @@ export default function AddSoftware({ navigation }) {
   const reVarChar100 = /[\w\s]{0,100}/;
 
   useEffect(async () => {
-    try {
-      const tipoSoftware = await SoftwareService.listarTipos();
-      setTipoSoftwareList(tipoSoftware);
-      const tipoLicenca = await SoftwareService.listarLicencas();
-      setLicencaList(tipoLicenca);
-      const computadorObj = await ComputadorService.findAll();
-      setComputadorList(computadorObj);
-      setRendering(false);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
+    AsyncStorage.getItem('ID').then((fromAsyncId) => {
+      SoftwareService.listarTipos().then((response) => {
+        setTipoSoftwareList(response);
+      });
+      SoftwareService.listarLicencas().then((response) => {
+        setLicencaList(response);
+      });
+      ComputadorService.findAll().then((response) => {
+        setComputadorList(response);
+      });
+      setID(fromAsyncId);
+      SoftwareService.findByID(fromAsyncId).then((response) => {
+        setNrSerie(response.nr_serie);
+        setFabricante(response.fabricante);
+        setVersao(response.versao);
+        setDescricao(response.descricao);
+        setChave(response.chave);
+        setCodTipoSoftware(response.cod_tipo_software.cod_tipo);
+        setCodLicenca(response.cod_tipo_licenca.cod_tipo);
+        setComputador(response.computador.nr_serie);
+        setValidade(response.validade);
+        setRendering(false);
+      });
+    });
   }, []);
 
   const changeValidadeDate = (event, selectedDate) => {
@@ -237,6 +250,7 @@ export default function AddSoftware({ navigation }) {
       setLoading(true);
 
       const data = {
+        id,
         nr_serie: nrSerie,
         fabricante,
         versao,
@@ -248,7 +262,7 @@ export default function AddSoftware({ navigation }) {
         validade,
       };
 
-      SoftwareService.registar(data)
+      SoftwareService.atualizar(data)
         .then((response) => {
           setLoading(false);
           const titulo = response.data.status ? 'Sucesso' : 'Erro';
@@ -263,6 +277,7 @@ export default function AddSoftware({ navigation }) {
             setCodLicenca(null);
             setComputador(null);
             setValidade(new Date());
+            navigation.goBack();
           }
         })
         .catch((error) => {
@@ -291,7 +306,7 @@ export default function AddSoftware({ navigation }) {
           >
             <MenuButton />
           </TouchableOpacity>
-          <Text style={styles.text_header}>Adicionar Software</Text>
+          <Text style={styles.text_header}>Alterar Software</Text>
         </View>
         <Animatable.View
           animation="fadeInUpBig"
