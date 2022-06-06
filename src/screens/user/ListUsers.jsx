@@ -251,7 +251,9 @@ export default class ListUsers extends React.Component {
                     size={20}
                     style={{ flex: 3.5, marginBottom: 5, marginLeft: 10 }}
                   />
-                  <Text style={{ flex: 4, fontWeight: theme.fontWeights.bold }}>Swipe</Text>
+                  <Text style={{ flex: 4, fontWeight: theme.fontWeights.bold }}>
+                    Swipe
+                  </Text>
                   <MaterialCommunityIcons
                     name="arrow-right"
                     size={20}
